@@ -1,5 +1,5 @@
 // 스니펫을 가짜 DOM에서 실행해 만들어진 CSS를 검사한다: node check.mjs
-// 1) 글자 대비(WCAG) 4.5:1 이상  2) 다시 실행해도 <style> 하나  3) 되돌리기로 지워짐
+// 1) 글자 대비(WCAG) 4.5:1 이상  2) 다시 실행해도 <style> 하나  3) 되돌리기로 지워짐  4) #RRGGBB가 아닌 색은 거부
 // THEME_LIST의 테마를 전부 검사한다. 대비 실패는 STRICT에 든 테마만 센다(vintage-pastel처럼 흐린 글자가 의도인 테마는 보고만)
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
@@ -12,7 +12,7 @@ const document = {
   getElementById: (id) => styles.find((s) => s.id === id) ?? null,
 };
 const source = (file) => readFileSync(new URL(file, import.meta.url), 'utf8');
-const run = (code) => runInNewContext(code, { document, console: { log() {} } });
+const run = (code) => runInNewContext(code, { document, console: { log() {}, error() {} } });
 const SNIPPET = source('./claude-theme.snippet.js');
 const STRICT = new Set(['dreamcore']);
 
@@ -69,5 +69,9 @@ for (const theme of Object.keys(THEME_LIST)) {
   assert.equal(styles.length, 0, `${theme}: 되돌리기 뒤에도 <style>이 남음`);
 }
 
+// 색 칸에 #RRGGBB가 아닌 값이 들어오면 CSS를 넣지 않는다(다른 규칙이 끼어드는 걸 막는지)
+run(SNIPPET.replace(/page: '#[0-9A-F]{6}'/, () => "page: '#fff} body{background:url(https://example.invalid/x)} x{a:b'"));
+assert.equal(styles.length, 0, '#RRGGBB가 아닌 색 값인데 CSS가 들어감');
+
 assert.equal(failed, 0, `대비 4.5:1 미만 ${failed}건`);
-console.log('통과: 검사 대상 대비 전부 4.5:1 이상, 다시 실행해도 하나, 되돌리기 동작');
+console.log('통과: 검사 대상 대비 전부 4.5:1 이상, 다시 실행해도 하나, 되돌리기 동작, 잘못된 색 값 거부');

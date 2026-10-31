@@ -108,8 +108,13 @@
   const save = () => {
     try { localStorage.setItem(DRAFT(current), JSON.stringify({ work, ...meta() })); $('saved').textContent = '자동 저장됨'; } catch {}
   };
+  // 저장본은 같은 주소의 다른 페이지도 고칠 수 있으니, 모든 칸이 #RRGGBB일 때만 쓴다
+  const isHex = (v) => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v);
   const draft = (name) => {
-    try { return JSON.parse(localStorage.getItem(DRAFT(name))); } catch { return null; }
+    try {
+      const d = JSON.parse(localStorage.getItem(DRAFT(name)));
+      return ['day', 'night'].every((m) => SLOTS.every(([k]) => isHex(d?.work?.[m]?.[k]))) ? d : null;
+    } catch { return null; }
   };
 
   // 미리보기: 편집 중인 색을 __edit 테마로 끼워 넣고 스니펫을 mockup 안에서 실행한다
@@ -117,7 +122,7 @@
     frame.contentDocument.documentElement.dataset.mode = mode === 'day' ? 'light' : 'dark';
     frame.contentWindow.eval(snippet
       .replace(/const PICK = '[\w-]+'/, "const PICK = '__edit'")
-      .replace(HOOK, `  THEMES.__edit = ${JSON.stringify(work)};\n${HOOK}`));
+      .replace(HOOK, () => `  THEMES.__edit = ${JSON.stringify(work)};\n${HOOK}`));
   };
   const outline = (cls, slot) => {
     const doc = frame.contentDocument;
@@ -191,22 +196,23 @@
 
   const themeCode = () => {
     const { id, desc } = meta();
-    const key = (k) => (/^[a-z_$][\w$]*$/i.test(k) ? k : `'${k}'`);
+    // 이름, 설명, 색은 JSON.stringify로 넣어 따옴표나 \가 있어도 코드가 깨지거나 끼어들지 않게 한다
+    const key = (k) => (/^[a-z_$][\w$]*$/i.test(k) ? k : JSON.stringify(k));
     const colors = (o) => {
-      const parts = SLOTS.map(([k]) => `${k}: '${o[k]}'`);
+      const parts = SLOTS.map(([k]) => `${k}: ${JSON.stringify(o[k])}`);
       const lines = [];
       for (let i = 0; i < parts.length; i += 4) lines.push(`    ${parts.slice(i, i + 4).join(', ')},`);
       return `{\n${lines.join('\n')}\n  }`;
     };
-    return ['// THEME_LIST에 넣을 줄', `${key(id)}: '${desc.replace(/'/g, "\\'")}',`, '', '// THEMES에 넣을 덩어리',
+    return ['// THEME_LIST에 넣을 줄', `${key(id)}: ${JSON.stringify(desc)},`, '', '// THEMES에 넣을 덩어리',
       `${key(id)}: {`, `  day: ${colors(work.day)},`, `  night: ${colors(work.night)},`, '},'].join('\n');
   };
   // 이 테마가 들어가고 PICK도 이 테마로 바뀐 스니펫 전체. 앱 개발자 도구에 통째로 붙여 넣으면 된다.
   const fullSnippet = () => {
     const { id, desc } = meta();
     return snippet
-      .replace(/const PICK = '[\w-]+'/, `const PICK = ${JSON.stringify(id)}`)
-      .replace(HOOK, `  // 테마 편집기에서 만든 테마\n  THEME_LIST[${JSON.stringify(id)}] = ${JSON.stringify(desc)};\n  THEMES[${JSON.stringify(id)}] = ${JSON.stringify(work)};\n${HOOK}`);
+      .replace(/const PICK = '[\w-]+'/, () => `const PICK = ${JSON.stringify(id)}`)
+      .replace(HOOK, () => `  // 테마 편집기에서 만든 테마\n  THEME_LIST[${JSON.stringify(id)}] = ${JSON.stringify(desc)};\n  THEMES[${JSON.stringify(id)}] = ${JSON.stringify(work)};\n${HOOK}`);
   };
   const copy = async (button, text) => {
     const label = button.textContent;

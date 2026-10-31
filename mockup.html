@@ -70,7 +70,8 @@
   if (q.get('mode')) document.documentElement.dataset.mode = q.get('mode');
   if (q.get('theme') !== 'off')
     fetch('claude-theme.snippet.js', { cache: 'no-store' }).then((r) => r.text())
-      .then((code) => new Function(q.get('pick') ? code.replace(/const PICK = '[\w-]+'/, `const PICK = '${q.get('pick')}'`) : code)());
+      // pick은 테마 이름 형식만 받는다. 주소 값이 코드로 실행되지 않게
+      .then((code) => new Function(/^[\w-]+$/.test(q.get('pick') ?? '') ? code.replace(/const PICK = '[\w-]+'/, () => `const PICK = '${q.get('pick')}'`) : code)());
 </script>
 </body>
 </html>

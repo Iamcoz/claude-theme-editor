@@ -41,6 +41,9 @@
   };
   if (!THEMES[PICK]) return console.error(`[claude-theme] 없는 테마: ${PICK}. 고를 수 있는 것: ${Object.keys(THEME_LIST).join(', ')}`);
   const { day, night } = THEMES[PICK];
+  // 색 값은 #RRGGBB만 받는다. 다른 글자가 CSS에 섞여 들어가 규칙이 끼어드는 걸 막는다
+  const bad = Object.entries({ ...day, ...Object.fromEntries(Object.entries(night).map(([k, v]) => [`밤 ${k}`, v])) }).find(([, v]) => !/^#[0-9a-f]{6}$/i.test(v));
+  if (bad) return console.error(`[claude-theme] 색 값이 #RRGGBB가 아님: ${bad[0]} = ${bad[1]}`);
 
   const channels = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
   const fade = (hex, a) => `rgb(${channels(hex).join(' ')} / ${a})`;
