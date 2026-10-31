@@ -7,9 +7,7 @@ Claude 데스크톱 앱(macOS)의 색을 바꾸는 테마 편집기와 DevTools 
 비공식 방법이에요. Claude 앱 4.29.0에 맞춰 만들었고, 앱 업데이트로 변수 이름이 바뀌면 일부 색이 원래대로 돌아올 수 있어요(앱이 고장 나지는 않아요).
 
 ## 예시 테마
-| dreamcore 낮 | dreamcore 밤 | vintage-pastel 낮 |
-|---|---|---|
-| ![dreamcore 낮](preview-dreamcore-day.jpg) | ![dreamcore 밤](preview-dreamcore-night.jpg) | ![vintage-pastel 낮](preview-vintage-pastel-day.jpg) |
+![vintage-pastel 낮](preview-vintage-pastel-day.jpg)
 
 - `dreamcore`: 바랜 필름 같은 몽환적인 색. 낮은 분홍빛 흰 바탕에 청록 버튼, 밤은 짙은 청록 바탕에 복숭아 버튼. 낮/밤 모두 글자 대비 4.5:1 이상
 - `vintage-pastel`: 90년대 사무실 같은 빈티지 파스텔. 밝은 색끼리 겹쳐 글자가 배경에 녹아드는 게 의도라 글자 대비가 낮아요(1.2~1.6:1). 낮에만 있고 밤은 dreamcore 밤과 같아요
