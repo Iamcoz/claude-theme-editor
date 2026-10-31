@@ -220,12 +220,12 @@
   const loadPalettes = async () => {
     let files = [];
     try {
-      const index = await fetch(PALETTE_DIR).then((r) => (r.ok ? r.text() : ''));
+      const index = await fetch(PALETTE_DIR, { cache: 'no-store' }).then((r) => (r.ok ? r.text() : ''));
       files = [...new Set([...index.matchAll(/href="([^"?#]+\.md)"/g)].map((m) => m[1]))];
     } catch {}
     const groups = await Promise.all(files.map(async (file) => {
       try {
-        const md = await fetch(PALETTE_DIR + file).then((r) => (r.ok ? r.text() : ''));
+        const md = await fetch(PALETTE_DIR + file, { cache: 'no-store' }).then((r) => (r.ok ? r.text() : ''));
         const title = md.match(/^#\s+(.+)$/m)?.[1] ?? decodeURIComponent(file);
         const seen = new Map();
         for (const [, hex, name] of md.matchAll(/\|\s*`(#[0-9A-Fa-f]{6})`\s*\|\s*([^|]*?)\s*\|/g)) if (!seen.has(hex.toUpperCase())) seen.set(hex.toUpperCase(), name);
@@ -275,7 +275,7 @@
   };
 
   (async () => {
-    snippet = await fetch('claude-theme.snippet.js').then((r) => r.text());
+    snippet = await fetch('claude-theme.snippet.js', { cache: 'no-store' }).then((r) => r.text());
     let pick;
     ({ THEME_LIST: list, THEMES: themes, PICK: pick } = (0, eval)(snippet.replace(HOOK, `  return { THEME_LIST, THEMES, PICK };\n${HOOK}`)));
     $('theme').append(...Object.entries(list).map(([id, about]) => Object.assign(new Option(id, id), { title: about })));

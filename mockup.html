@@ -69,7 +69,7 @@
   const q = new URLSearchParams(location.search);
   if (q.get('mode')) document.documentElement.dataset.mode = q.get('mode');
   if (q.get('theme') !== 'off')
-    fetch('claude-theme.snippet.js').then((r) => r.text())
+    fetch('claude-theme.snippet.js', { cache: 'no-store' }).then((r) => r.text())
       .then((code) => new Function(q.get('pick') ? code.replace(/const PICK = '[\w-]+'/, `const PICK = '${q.get('pick')}'`) : code)());
 </script>
 </body>
