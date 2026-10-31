@@ -9,12 +9,12 @@
   };
   const PICK = 'vintage-pastel';
 
-  // 색 칸: page 대화 바탕, sunken 사이드바(움푹한 면), raised 입력창·메뉴·카드, field 입력칸,
+  // 색 칸: page 대화 바탕, sunken 사이드바(움푹한 면), raised 메뉴·카드, composer 하단 채팅 입력창, field 입력칸,
   // text 본문 글자, textSoft 보조 글자·아이콘, textFaint 흐린 글자, line 구분선,
   // button 버튼·링크, buttonHover 버튼 hover, onButton 버튼 위 글자, picked 선택된 목록 줄,
   // tint 내 메시지 말풍선 바탕, spark 글자 선택 영역·강조 표시
   const DREAMCORE_NIGHT = {
-    page: '#203132', sunken: '#37391D', raised: '#2D3C3D', field: '#2D3C3D',
+    page: '#203132', sunken: '#37391D', raised: '#2D3C3D', composer: '#2D3C3D', field: '#2D3C3D',
     text: '#F2E2EA', textSoft: '#A8B6CB', textFaint: '#C0ABAA', line: '#737C8B',
     button: '#F5BCB0', buttonHover: '#F9D7C6', onButton: '#192010', picked: '#192010',
     tint: '#3D6079', spark: '#DBA247',
@@ -22,7 +22,7 @@
   const THEMES = {
     dreamcore: {
       day: {
-        page: '#F2E2EA', sunken: '#E5D1D7', raised: '#F2E2EA', field: '#F2E2EA',
+        page: '#F2E2EA', sunken: '#E5D1D7', raised: '#F2E2EA', composer: '#F2E2EA', field: '#F2E2EA',
         text: '#192010', textSoft: '#3D6079', textFaint: '#4D4D2A', line: '#C0ABAA',
         button: '#215C75', buttonHover: '#2D5981', onButton: '#F2E2EA', picked: '#ECCFDE',
         tint: '#CAD0E1', spark: '#DBA247',
@@ -31,7 +31,7 @@
     },
     'vintage-pastel': {
       day: {
-        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#E6DDA4', field: '#E6DDA4',
+        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#E6DDA4', composer: '#E6DDA4', field: '#E6DDA4',
         text: '#EFECDC', textSoft: '#859E7A', textFaint: '#EFECDC', line: '#E9B3BA',
         button: '#DA9D9B', buttonHover: '#D58C95', onButton: '#EFECDC', picked: '#E6DDA4',
         tint: '#BCCBE0', spark: '#BFA964',
@@ -146,11 +146,15 @@
     '--df-z6': hslParts(c.textFaint),
   });
   const FRAME = ['.dframe-root', '.dframe-root .dframe-sidebar', '.dframe-root .dframe-sidebar-body', '.dframe-root .dframe-card'];
+  // 하단 채팅 입력창. 메뉴와 같은 면 변수를 쓰므로 입력창 상자에만 따로 다시 건다
+  const composerVars = (c) => ({ '--cds-surface-3': c.composer, '--cds-surface-popover': c.composer });
+  const COMPOSER = ['[data-code-composer-column] .bg-surface-3', '.bg-surface-3.shadow-composer', '.bg-surface-3.rounded-composer'];
 
   // 앱 CSS와 같은 구조: 낮은 기본값, 밤은 더 구체적인 선택자로 덮는다. 앱은 data-mode가 없으면 시스템으로 본다.
   const NIGHT_SCOPES = ['[data-mode=dark] .cds-root:not([data-mode=light]):not([data-mode=system])', '.cds-root[data-mode=dark]', '.cds-dark-scope[data-mode=dark]'];
   const SYSTEM_SCOPES = ['[data-mode=system] .cds-root:not([data-mode=light]):not([data-mode=dark])', '.cds-root[data-mode=system]', '.cds-root:not([data-mode]):not([data-mode] *)'];
-  const under = (prefixes) => prefixes.flatMap((p) => FRAME.map((f) => `${p} ${f}`));
+  const SYSTEM_NIGHT = ['[data-mode=system]', ':root:not([data-mode])'];
+  const under = (prefixes, targets) => prefixes.flatMap((p) => targets.map((t) => `${p} ${t}`));
 
   // 앱은 이 변수들에 !important를 쓰지 않아서 !important만 붙이면 선택자 우선순위와 상관없이 이긴다
   const block = (selectors, vars) =>
@@ -163,10 +167,12 @@
     '/* day */',
     block(['.cds-root'], appVars(day)),
     block(FRAME, frameVars(day)),
+    block(COMPOSER, composerVars(day)),
     '/* night */',
     block(NIGHT_SCOPES, appVars(night)),
-    block(under(['[data-mode=dark]']), frameVars(night)),
-    `@media (prefers-color-scheme: dark) {\n${block(SYSTEM_SCOPES, appVars(night))}\n${block(under(['[data-mode=system]', ':root:not([data-mode])']), frameVars(night))}\n}`,
+    block(under(['[data-mode=dark]'], FRAME), frameVars(night)),
+    block(under(['[data-mode=dark]'], COMPOSER), composerVars(night)),
+    `@media (prefers-color-scheme: dark) {\n${block(SYSTEM_SCOPES, appVars(night))}\n${block(under(SYSTEM_NIGHT, FRAME), frameVars(night))}\n${block(under(SYSTEM_NIGHT, COMPOSER), composerVars(night))}\n}`,
     `::selection { background: ${fade(day.spark, 0.45)} !important; }`,
   ].join('\n');
   console.log(`[claude-theme] ${PICK} 적용됨`);

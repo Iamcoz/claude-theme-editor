@@ -57,7 +57,7 @@ const version = readFileSync(`${APP}/Info.plist`, 'utf8').match(/CFBundleShortVe
 const snippet = readFileSync(new URL('./claude-theme.snippet.js', import.meta.url), 'utf8');
 const used = [...new Set(snippet.match(/'--(?:cds|bg|text|df)-[\w-]+'/g).map((s) => s.slice(1, -1)))];
 // 선택자는 통째로 같은 줄이 없을 수 있어서, 들어 있는 클래스와 속성 이름이 앱 CSS에 있는지만 본다
-const tokens = [...new Set([...snippet.matchAll(/'((?:\[data-mode=\w+\]|\.cds-|\.dframe-|:root)[^']*)'/g)]
+const tokens = [...new Set([...snippet.matchAll(/'((?:\[data-mode=\w+\]|\[data-code-|\.cds-|\.dframe-|\.bg-surface-|:root)[^']*)'/g)]
   .flatMap((m) => m[1].match(/\.[\w-]+|\[[\w-]+(?:=\w+)?\]/g) ?? []))];
 
 console.log(`앱 버전 ${version}, 앱 파일 CSS ${cssFiles.length}개, 캐시된 claude.ai CSS ${webCss ? '읽음' : '없음'}`);
