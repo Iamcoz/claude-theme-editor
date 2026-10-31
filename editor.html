@@ -10,58 +10,70 @@
   :root { --bg: #f6f6f4; --panel: #fff; --ink: #1d1d1b; --soft: #6b6b66; --line: #e3e2de; --pick: #2f6fdb; }
   * { box-sizing: border-box; }
   body { margin: 0; font: 13px/1.45 -apple-system, "Apple SD Gothic Neo", sans-serif; background: var(--bg); color: var(--ink); }
-  .editor { display: flex; height: 100vh; }
-  .panel { width: 360px; flex: none; overflow-y: auto; padding: 18px 16px 28px; background: var(--panel); border-right: 1px solid var(--line); }
-  h1 { margin: 0 0 14px; font-size: 16px; }
-  h2 { margin: 22px 0 6px; font-size: 13px; }
-  label.field { display: block; margin-bottom: 8px; color: var(--soft); }
-  select, input[type=text], textarea { width: 100%; margin-top: 4px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; color: inherit; background: #fff; }
-  .about { margin: 0 0 12px; color: var(--soft); }
-  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .seg button { border: 0; padding: 6px 16px; font: inherit; background: none; cursor: pointer; }
+  .app { display: flex; flex-direction: column; height: 100vh; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .bar strong { margin-right: 6px; font-size: 14px; }
+  .grow { flex: 1; }
+  .saved { color: var(--soft); font-size: 12px; }
+  select, input[type=text] { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; color: inherit; background: #fff; }
+  button { padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; color: inherit; background: #fff; cursor: pointer; }
+  button:hover { border-color: #c9c8c3; }
+  button.main { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; padding: 6px 14px; }
   .seg button.on { background: var(--ink); color: #fff; }
-  .hint { margin: 0 0 8px; color: var(--soft); }
-  ul { list-style: none; margin: 10px 0 0; padding: 0; }
-  li { display: grid; grid-template-columns: 30px 1fr 84px 38px; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; cursor: pointer; }
+  .body { display: flex; flex: 1; min-height: 0; }
+  .col { flex: none; overflow-y: auto; padding: 12px; background: var(--panel); border-right: 1px solid var(--line); }
+  .slots { width: 310px; }
+  .pal { width: 220px; }
+  .hint { margin: 0 0 8px; color: var(--soft); font-size: 12px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: grid; grid-template-columns: 28px 1fr 80px 34px; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 6px; cursor: pointer; }
   li:hover { background: var(--bg); }
   li.on { background: #e9effb; box-shadow: inset 0 0 0 1px var(--pick); }
-  li input[type=color] { width: 30px; height: 24px; padding: 0; border: 1px solid var(--line); border-radius: 4px; background: none; cursor: pointer; }
-  li input[type=text] { margin: 0; padding: 4px 6px; font: 12px ui-monospace, Menlo, monospace; }
+  li input[type=color] { width: 28px; height: 24px; padding: 0; border: 1px solid var(--line); border-radius: 4px; background: none; cursor: pointer; }
+  li input[type=text] { padding: 4px 6px; font: 12px ui-monospace, Menlo, monospace; }
   .ratio { font: 11px ui-monospace, Menlo, monospace; color: var(--soft); text-align: right; }
   .ratio.low { color: #b3261e; }
+  .meta { margin-top: 14px; display: grid; gap: 6px; }
+  .meta label { display: grid; gap: 3px; color: var(--soft); font-size: 12px; }
   .pal h3 { margin: 12px 0 6px; font-size: 12px; font-weight: 600; color: var(--soft); }
-  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
-  .chip { width: 26px; height: 26px; border: 1px solid rgb(0 0 0 / .12); border-radius: 5px; cursor: pointer; }
-  .chip:hover { transform: scale(1.12); }
-  textarea { height: 220px; font: 11.5px/1.5 ui-monospace, Menlo, monospace; resize: vertical; }
-  .actions { display: flex; gap: 6px; margin-top: 8px; }
-  .actions button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: #fff; cursor: pointer; }
-  .actions button.main { background: var(--ink); color: #fff; border-color: var(--ink); }
-  iframe { flex: 1; border: 0; background: #fff; }
+  .pal h3:first-of-type { margin-top: 0; }
+  .chips { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .chip { aspect-ratio: 1; padding: 0; border: 1px solid rgb(0 0 0 / .12); border-radius: 5px; }
+  .chip:hover { transform: scale(1.12); border-color: rgb(0 0 0 / .12); }
+  .chip.now { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--pick); }
+  iframe { flex: 1; min-width: 0; border: 0; background: #fff; }
 </style>
 </head>
 <body>
-<div class="editor">
-  <aside class="panel">
-    <h1>테마 편집기</h1>
-    <label class="field">테마<select id="theme"></select></label>
-    <p class="about" id="about"></p>
+<div class="app">
+  <header class="bar">
+    <strong>테마 편집기</strong>
+    <select id="theme" aria-label="테마"></select>
     <div class="seg" id="mode"><button data-mode="day" class="on">낮</button><button data-mode="night">밤</button></div>
-
-    <h2>색 칸</h2>
-    <p class="hint">칸을 고른 뒤 아래 팔레트 색을 누르거나, 왼쪽 네모를 눌러 직접 골라요. 오른쪽 숫자는 글자 대비(4.5 이상이면 잘 읽혀요).</p>
-    <ul id="slots"></ul>
-
-    <h2>팔레트</h2>
-    <div class="pal" id="palettes"></div>
-
-    <h2>코드</h2>
-    <label class="field">새 테마 이름<input type="text" id="name"></label>
-    <label class="field">설명<input type="text" id="desc"></label>
-    <textarea id="code" readonly></textarea>
-    <div class="actions"><button class="main" id="copy">코드 복사</button><button id="reset">처음 값으로</button></div>
-  </aside>
-  <iframe id="view" src="mockup.html?theme=off&mode=light" title="미리보기"></iframe>
+    <button id="undo" title="Cmd+Z">되돌리기</button>
+    <button id="reset">처음 값으로</button>
+    <span class="saved" id="saved"></span>
+    <span class="grow"></span>
+    <button id="copyCode" title="저장소의 THEME_LIST, THEMES에 넣을 코드">테마 코드 복사</button>
+    <button id="copyAll" class="main" title="이 테마가 들어간 스니펫 전체. 앱 개발자 도구의 스니펫에 통째로 붙여 넣는다">앱에 붙일 스니펫 복사</button>
+  </header>
+  <div class="body">
+    <section class="col slots">
+      <p class="hint">칸을 누르거나, 오른쪽 미리보기에서 바꿀 곳을 바로 눌러요. 숫자는 글자 대비(4.5 이상이면 잘 읽혀요).</p>
+      <ul id="slots"></ul>
+      <div class="meta">
+        <label>테마 이름<input type="text" id="name"></label>
+        <label>설명<input type="text" id="desc"></label>
+      </div>
+    </section>
+    <section class="col pal">
+      <p class="hint">누르면 고른 칸에 바로 들어가요.</p>
+      <div id="palettes"></div>
+    </section>
+    <iframe id="view" src="mockup.html?theme=off&mode=light" title="미리보기"></iframe>
+  </div>
 </div>
 <script>
   const SLOTS = [
@@ -74,10 +86,12 @@
   const PALETTES = [['dreamcore', '../palettes/surreal-series.md'], ['vintage-pastel', '../palettes/vintage-pastel.md']];
   // 스니펫이 화면을 건드리기 전에 끼어드는 자리. check.mjs도 같은 줄을 쓴다.
   const HOOK = '  if (!THEMES[PICK])';
+  const DRAFT = (name) => `claude-theme-editor:${name}`;
 
   const $ = (id) => document.getElementById(id);
   const frame = $('view');
-  let snippet, list, themes, current, mode = 'day', selected = 'page', work;
+  let snippet, list, themes, current, work, mode = 'day', selected = 'page', rows = [];
+  let history = [], lastSnap = 0;
 
   const lum = (hex) => {
     const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -89,38 +103,28 @@
     return (hi + 0.05) / (lo + 0.05);
   };
 
+  // 편집 중인 테마 = 색 + 이름 + 설명. 브라우저에 자동 저장해서 새로 고쳐도 남는다.
+  const meta = () => ({ id: $('name').value.trim() || current, desc: $('desc').value });
+  const save = () => {
+    try { localStorage.setItem(DRAFT(current), JSON.stringify({ work, ...meta() })); $('saved').textContent = '자동 저장됨'; } catch {}
+  };
+  const draft = (name) => {
+    try { return JSON.parse(localStorage.getItem(DRAFT(name))); } catch { return null; }
+  };
+
   // 미리보기: 편집 중인 색을 __edit 테마로 끼워 넣고 스니펫을 mockup 안에서 실행한다
   const paint = () => {
-    const doc = frame.contentDocument;
-    doc.documentElement.dataset.mode = mode === 'day' ? 'light' : 'dark';
+    frame.contentDocument.documentElement.dataset.mode = mode === 'day' ? 'light' : 'dark';
     frame.contentWindow.eval(snippet
       .replace(/const PICK = '[\w-]+'/, "const PICK = '__edit'")
       .replace(HOOK, `  THEMES.__edit = ${JSON.stringify(work)};\n${HOOK}`));
   };
-
-  const key = (k) => (/^[a-z_$][\w$]*$/i.test(k) ? k : `'${k}'`);
-  const colors = (o, pad) => {
-    const parts = SLOTS.map(([k]) => `${k}: '${o[k]}'`);
-    const lines = [];
-    for (let i = 0; i < parts.length; i += 4) lines.push(`${pad}  ${parts.slice(i, i + 4).join(', ')},`);
-    return `{\n${lines.join('\n')}\n${pad}}`;
-  };
-  const writeCode = () => {
-    const id = $('name').value.trim() || current;
-    $('code').value = [
-      '// THEME_LIST에 넣을 줄',
-      `${key(id)}: '${$('desc').value.replace(/'/g, "\\'")}',`,
-      '',
-      '// THEMES에 넣을 덩어리',
-      `${key(id)}: {`,
-      `  day: ${colors(work.day, '  ')},`,
-      `  night: ${colors(work.night, '  ')},`,
-      '},',
-    ].join('\n');
+  const outline = (cls, slot) => {
+    const doc = frame.contentDocument;
+    doc.querySelectorAll(`.${cls}`).forEach((el) => el.classList.remove(cls));
+    if (slot) doc.querySelectorAll(`[data-slot="${slot}"]`).forEach((el) => el.classList.add(cls));
   };
 
-  // 칸 줄은 테마나 낮밤이 바뀔 때만 새로 만든다. 색만 바뀔 때 다시 만들면 고르던 색 선택 창이 닫힌다.
-  let rows = [];
   const update = () => {
     const c = work[mode];
     for (const { k, li, picker, hex, ratio } of rows) {
@@ -131,19 +135,41 @@
       ratio.textContent = r === null ? '' : r.toFixed(1);
       ratio.classList.toggle('low', r !== null && r < 4.5);
     }
-    writeCode();
+    document.querySelectorAll('.chip').forEach((b) => b.classList.toggle('now', b.dataset.hex === c[selected]));
+    $('undo').disabled = !history.length;
     paint();
+    outline('slot-on', selected);
   };
+
+  const select = (k) => {
+    selected = k;
+    update();
+    rows.find((r) => r.k === k)?.li.scrollIntoView({ block: 'nearest' });
+  };
+  // 색 고르기 창을 끄는 동안 나오는 연속 변경은 되돌리기 한 번에 묶는다
   const setColor = (k, hex) => {
+    if (Date.now() - lastSnap > 600) history.push(JSON.stringify(work));
+    lastSnap = Date.now();
     work[mode][k] = hex.toUpperCase();
+    save();
     update();
   };
+  const undo = () => {
+    if (!history.length) return;
+    work = JSON.parse(history.pop());
+    save();
+    update();
+  };
+
+  // 칸 줄은 테마나 낮밤이 바뀔 때만 새로 만든다. 색만 바뀔 때 다시 만들면 고르던 색 선택 창이 닫힌다.
   const render = () => {
     rows = SLOTS.map(([k, label]) => {
       const li = document.createElement('li');
       li.innerHTML = `<input type="color" aria-label="${label}"><span>${label}</span><input type="text" aria-label="${label} 색 코드"><span class="ratio"></span>`;
       const [picker, hex] = li.querySelectorAll('input');
-      li.onclick = () => { selected = k; update(); };
+      li.onclick = () => select(k);
+      li.onmouseenter = () => outline('slot-hover', k);
+      li.onmouseleave = () => outline('slot-hover');
       picker.oninput = () => setColor(k, picker.value);
       hex.onchange = () => (/^#[0-9a-f]{6}$/i.test(hex.value) ? setColor(k, hex.value) : (hex.value = work[mode][k]));
       return { k, li, picker, hex, ratio: li.lastChild };
@@ -152,13 +178,41 @@
     update();
   };
 
-  const load = (name) => {
+  const load = (name, fresh = false) => {
     current = name;
-    work = structuredClone(themes[name]);
-    $('about').textContent = list[name];
-    $('name').value = name;
-    $('desc').value = list[name];
+    const d = fresh ? null : draft(name);
+    work = d?.work ?? structuredClone(themes[name]);
+    $('name').value = d?.id ?? name;
+    $('desc').value = d?.desc ?? list[name];
+    $('saved').textContent = d ? '자동 저장본을 불러왔어요' : '';
+    history = [];
     render();
+  };
+
+  const themeCode = () => {
+    const { id, desc } = meta();
+    const key = (k) => (/^[a-z_$][\w$]*$/i.test(k) ? k : `'${k}'`);
+    const colors = (o) => {
+      const parts = SLOTS.map(([k]) => `${k}: '${o[k]}'`);
+      const lines = [];
+      for (let i = 0; i < parts.length; i += 4) lines.push(`    ${parts.slice(i, i + 4).join(', ')},`);
+      return `{\n${lines.join('\n')}\n  }`;
+    };
+    return ['// THEME_LIST에 넣을 줄', `${key(id)}: '${desc.replace(/'/g, "\\'")}',`, '', '// THEMES에 넣을 덩어리',
+      `${key(id)}: {`, `  day: ${colors(work.day)},`, `  night: ${colors(work.night)},`, '},'].join('\n');
+  };
+  // 이 테마가 들어가고 PICK도 이 테마로 바뀐 스니펫 전체. 앱 개발자 도구에 통째로 붙여 넣으면 된다.
+  const fullSnippet = () => {
+    const { id, desc } = meta();
+    return snippet
+      .replace(/const PICK = '[\w-]+'/, `const PICK = ${JSON.stringify(id)}`)
+      .replace(HOOK, `  // 테마 편집기에서 만든 테마\n  THEME_LIST[${JSON.stringify(id)}] = ${JSON.stringify(desc)};\n  THEMES[${JSON.stringify(id)}] = ${JSON.stringify(work)};\n${HOOK}`);
+  };
+  const copy = async (button, text) => {
+    const label = button.textContent;
+    await navigator.clipboard.writeText(text);
+    button.textContent = '복사됨';
+    setTimeout(() => (button.textContent = label), 1500);
   };
 
   // 팔레트 문서의 표 줄(| ... | `#RRGGBB` | 이름 |)에서 색과 이름을 뽑는다. 못 읽으면 테마에 쓰인 색만 보여 준다.
@@ -175,41 +229,67 @@
       const used = new Set(Object.values(themes).flatMap((t) => [...Object.values(t.day), ...Object.values(t.night)]));
       groups.splice(0, groups.length, ['테마에 쓰인 색', [...used].map((h) => [h, h])]);
     }
-    $('palettes').replaceChildren(...groups.filter(([, c]) => c.length).map(([title, chips]) => {
+    $('palettes').replaceChildren(...groups.filter(([, c]) => c.length).flatMap(([title, chips]) => {
+      const h = document.createElement('h3');
+      h.textContent = title;
       const box = document.createElement('div');
-      box.innerHTML = `<h3>${title}</h3><div class="chips"></div>`;
-      box.lastChild.append(...chips.map(([hex, name]) => {
+      box.className = 'chips';
+      box.append(...chips.map(([hex, name]) => {
         const b = document.createElement('button');
         b.className = 'chip';
         b.style.background = hex;
+        b.dataset.hex = hex;
         b.title = `${name} ${hex}`;
         b.onclick = () => setColor(selected, hex);
         return b;
       }));
-      return box;
+      return [h, box];
     }));
+    update();
+  };
+
+  // 미리보기에서 누른 곳의 색 칸을 고른다(mockup.html의 data-slot)
+  const wirePreview = () => {
+    const doc = frame.contentDocument;
+    const style = doc.createElement('style');
+    style.textContent = '[data-slot] { cursor: pointer; } .slot-hover { outline: 2px dashed #2f6fdb; outline-offset: 2px; } .slot-on { outline: 2px solid #2f6fdb; outline-offset: 2px; }';
+    doc.head.append(style);
+    doc.addEventListener('mouseover', (e) => outline('slot-hover', e.target.closest('[data-slot]')?.dataset.slot));
+    doc.addEventListener('mouseleave', () => outline('slot-hover'));
+    doc.addEventListener('click', (e) => {
+      const slot = e.target.closest('[data-slot]')?.dataset.slot;
+      e.preventDefault();
+      if (slot) select(slot);
+    });
+    doc.addEventListener('keydown', onKey);
+  };
+  const onKey = (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); undo(); }
   };
 
   (async () => {
     snippet = await fetch('claude-theme.snippet.js').then((r) => r.text());
     ({ THEME_LIST: list, THEMES: themes } = (0, eval)(snippet.replace(HOOK, `  return { THEME_LIST, THEMES };\n${HOOK}`)));
-    $('theme').append(...Object.entries(list).map(([id, about]) => new Option(id, id)));
+    $('theme').append(...Object.entries(list).map(([id, about]) => Object.assign(new Option(id, id), { title: about })));
     $('theme').onchange = () => load($('theme').value);
     $('mode').onclick = (e) => {
       if (!e.target.dataset.mode) return;
       mode = e.target.dataset.mode;
       for (const b of $('mode').children) b.classList.toggle('on', b === e.target);
-      render();
+      update();
     };
-    $('name').oninput = $('desc').oninput = writeCode;
-    $('reset').onclick = () => load(current);
-    $('copy').onclick = async () => {
-      await navigator.clipboard.writeText($('code').value);
-      $('copy').textContent = '복사됨';
-      setTimeout(() => ($('copy').textContent = '코드 복사'), 1500);
+    $('name').oninput = $('desc').oninput = save;
+    $('undo').onclick = undo;
+    $('reset').onclick = () => {
+      try { localStorage.removeItem(DRAFT(current)); } catch {}
+      load(current, true);
     };
+    $('copyCode').onclick = () => copy($('copyCode'), themeCode());
+    $('copyAll').onclick = () => copy($('copyAll'), fullSnippet());
+    document.addEventListener('keydown', onKey);
     const ready = () => frame.contentDocument?.URL.includes('mockup') && frame.contentDocument.readyState === 'complete';
     if (!ready()) await new Promise((ok) => frame.addEventListener('load', ok, { once: true }));
+    wirePreview();
     load(Object.keys(list)[0]);
     loadPalettes();
   })();
