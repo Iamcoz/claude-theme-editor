@@ -60,7 +60,12 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 Console 칸에 `document.getElementById('claude-theme')?.remove();`를 입력하고 Enter를 눌러요. 앱을 다시 시작해도 원래 색으로 돌아가요. `revert.snippet.js`를 3단계처럼 스니펫으로 저장해 둬도 돼요.
 
 ## 앱을 다시 시작했을 때
-테마는 앱을 끄면 사라져요. 앱에는 사용자 색을 저장해 두는 기능이 없어서, 이 방법은 켤 때마다 한 번 실행해야 해요. 다시 켠 뒤 **개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 열고, **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
+테마는 앱을 끄면 사라져요. 앱에는 사용자 색을 저장해 두는 기능이 없어서, 이 방법은 켤 때마다 한 번 실행해야 해요. 키보드로 하면 5초면 끝나요.
+1. Claude 앱에서 Option+Cmd+I로 개발자 도구를 열어요(**개발자 > 개발자 도구 표시**, Developer > Show Dev Tools).
+2. Cmd+P를 누르고 `!`를 입력하면 저장해 둔 스니펫 목록이 나와요.
+3. `claude-theme`을 골라 Enter를 눌러요. 바로 적용되고, 개발자 도구는 닫아도 돼요.
+
+마우스로 하려면 **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
 
 ## 색 바꾸기
 편집기를 쓰거나, `claude-theme.snippet.js` 위쪽 `THEMES`의 색 값만 고치면 돼요. 고친 뒤에는 대비를 확인해요.
