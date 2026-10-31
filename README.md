@@ -101,3 +101,8 @@ node check.mjs
 | `mockup.html` | 앱처럼 생긴 가짜 화면. 편집기 미리보기와 README 그림에 써요 |
 | `check.mjs` | 대비, 중복 실행, 되돌리기, 잘못된 색 값 검사 |
 | `app-vars.mjs` | 스니펫이 쓰는 이름이 지금 앱에 있는지 검사 |
+
+## 라이선스
+[PolyForm Noncommercial 1.0.0](LICENSE)이에요.
+- 개인 사용, 공부, 취미처럼 돈을 벌지 않는 목적이면 자유롭게 쓰고 고쳐서 나눠도 돼요. 나눌 때는 `LICENSE` 파일을 같이 넣어 주세요.
+- 상업적으로 쓰려면(판매, 유료 서비스나 제품에 넣기, 회사 업무용 배포 등) 먼저 허락을 받아야 해요. 이 저장소의 [Issues](https://github.com/Iamcoz/claude-theme-editor/issues)에 문의해 주세요.
