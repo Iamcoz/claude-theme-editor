@@ -276,7 +276,8 @@
 
   (async () => {
     snippet = await fetch('claude-theme.snippet.js').then((r) => r.text());
-    ({ THEME_LIST: list, THEMES: themes } = (0, eval)(snippet.replace(HOOK, `  return { THEME_LIST, THEMES };\n${HOOK}`)));
+    let pick;
+    ({ THEME_LIST: list, THEMES: themes, PICK: pick } = (0, eval)(snippet.replace(HOOK, `  return { THEME_LIST, THEMES, PICK };\n${HOOK}`)));
     $('theme').append(...Object.entries(list).map(([id, about]) => Object.assign(new Option(id, id), { title: about })));
     $('theme').onchange = () => load($('theme').value);
     $('mode').onclick = (e) => {
@@ -297,7 +298,9 @@
     const ready = () => frame.contentDocument?.URL.includes('mockup') && frame.contentDocument.readyState === 'complete';
     if (!ready()) await new Promise((ok) => frame.addEventListener('load', ok, { once: true }));
     wirePreview();
-    load(Object.keys(list)[0]);
+    const start = list[pick] ? pick : Object.keys(list)[0];
+    $('theme').value = start;
+    load(start);
     loadPalettes();
   })();
 </script>
