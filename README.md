@@ -13,7 +13,7 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 (위 그림은 앱과 같은 변수 이름을 쓰는 목업 화면 `mockup.html`이에요. 실제 앱 화면이 아니에요.)
 
 ## 테마 고르기
-`claude-theme.snippet.js` 맨 위 `THEME_LIST`에 고를 수 있는 테마 이름과 설명이 있어요. 그중 하나를 바로 아래 `const PICK = 'dreamcore';`에 적고 다시 실행해요. 없는 이름을 적으면 Console에 고를 수 있는 이름을 보여 줘요.
+`claude-theme.snippet.js` 맨 위 `THEME_LIST`에 고를 수 있는 테마 이름과 설명이 있어요. 그중 하나를 바로 아래 `const PICK = '...';`에 적고 다시 실행해요. 없는 이름을 적으면 Console에 고를 수 있는 이름을 보여 줘요.
 
 ## 색 조합 바꾸기 (테마 편집기)
 `editor.html`에서 글자, 아이콘, 버튼 같은 칸마다 색을 바꾸면서 미리보기로 바로 볼 수 있어요.
@@ -52,7 +52,7 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 6. Cmd+S로 저장해요. 이름 옆 `*` 표시가 사라지면 저장된 거예요.
 
 ### 4. 실행하기
-편집 칸을 누른 상태에서 Cmd+Enter를 눌러요. 편집 칸 오른쪽 아래 ▶ 버튼이나, 왼쪽 목록의 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러도 돼요. 바로 앱 색이 바뀌어요. 아래쪽 Console(콘솔)에 `[claude-theme] dreamcore 적용됨`이 나오면 성공이에요(Console이 안 보이면 Esc를 눌러 열어요).
+편집 칸을 누른 상태에서 Cmd+Enter를 눌러요. 편집 칸 오른쪽 아래 ▶ 버튼이나, 왼쪽 목록의 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러도 돼요. 바로 앱 색이 바뀌어요. 아래쪽 Console(콘솔)에 `[claude-theme] vintage-pastel 적용됨`이 나오면 성공이에요(Console이 안 보이면 Esc를 눌러 열어요).
 
 다 끝나면 개발자 도구는 닫아도 돼요. 테마는 그대로 남아요.
 

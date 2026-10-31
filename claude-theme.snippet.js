@@ -7,7 +7,7 @@
     dreamcore: 'Surreal Series 영상 색. 낮은 분홍빛 흰 바탕에 청록 버튼, 밤은 짙은 청록 바탕에 복숭아 버튼',
     'vintage-pastel': '빈티지 파스텔 선호 조합. 밝은 색끼리 겹쳐 글자가 흐린 게 의도. 낮만 있고 밤은 dreamcore 밤',
   };
-  const PICK = 'dreamcore';
+  const PICK = 'vintage-pastel';
 
   // 색 칸: page 대화 바탕, sunken 사이드바(움푹한 면), raised 입력창·메뉴·카드, field 입력칸,
   // text 본문 글자, textSoft 보조 글자·아이콘, textFaint 흐린 글자, line 구분선,
