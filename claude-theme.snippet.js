@@ -31,10 +31,10 @@
     },
     'vintage-pastel': {
       day: {
-        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#F3D3D8', field: '#E6DDA4',
-        text: '#EFECDC', textSoft: '#859E7A', textFaint: '#E3DFC4', line: '#9D949F',
-        button: '#E9B3BA', buttonHover: '#C9A3A6', onButton: '#EFECDC', picked: '#E9B3BA',
-        tint: '#7A8CA5', spark: '#BFA964',
+        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#E6DDA4', field: '#E6DDA4',
+        text: '#EFECDC', textSoft: '#859E7A', textFaint: '#EFECDC', line: '#9D949F',
+        button: '#DA9D9B', buttonHover: '#D58C95', onButton: '#EFECDC', picked: '#E6DDA4',
+        tint: '#192010', spark: '#BFA964',
       },
       night: DREAMCORE_NIGHT,
     },
