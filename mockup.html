@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 앱과 같은 변수 이름, 같은 모드 선택자를 쓰는 가짜 화면. 주소 뒤 ?mode=light|dark|system(없으면 시스템), &pick=surreal|vintage, &theme=off 면 테마 없이 -->
+<!-- 앱과 같은 변수 이름, 같은 모드 선택자를 쓰는 가짜 화면. 주소 뒤 ?mode=light|dark|system(없으면 시스템), &pick=테마 이름(THEME_LIST), &theme=off 면 테마 없이 -->
 <html class="cds-root" lang="ko">
 <head>
 <meta charset="utf-8">
@@ -11,7 +11,7 @@
     --cds-text-primary: #1a1a1a; --cds-text-secondary: #666; --cds-text-muted: #888; --cds-border: rgb(0 0 0 / .1);
     --cds-fill-ghost-hover: rgb(0 0 0 / .05); --cds-fill-ghost-selected: rgb(0 0 0 / .1);
     --cds-fill-accent: #257de0; --cds-fill-accent-hover: #1757ac; --cds-on-accent: #fff; --cds-text-accent: #257de0;
-    --cds-bg-accent: #e3effc; --cds-bg-user-message: rgb(0 0 0 / .05); --cds-bg-highlight: #fde68a;
+    --cds-bg-accent: #e3effc; --cds-bg-user-message: rgb(0 0 0 / .05); --cds-bg-highlight: #fde68a; --cds-fill-field: #ffffff80;
   }
   [data-mode=dark] .cds-root:not([data-mode=light]):not([data-mode=system]), .cds-root[data-mode=dark] {
     --cds-page-bg: #1f1f1e; --cds-surface-0: #1f1f1e; --cds-surface-3: #30302e;
@@ -22,8 +22,11 @@
   body { margin: 0; font: 14px/1.5 -apple-system, "Apple SD Gothic Neo", sans-serif; background: var(--cds-page-bg); color: var(--cds-text-primary); }
   .app { display: flex; height: 100vh; }
   aside { width: 240px; padding: 14px 10px; background: var(--cds-surface-0); border-right: 1px solid var(--cds-border); }
+  .search { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; padding: 7px 10px; border: 1px solid var(--cds-border); border-radius: 8px; background: var(--cds-fill-field); color: var(--cds-text-muted); }
+  .icon { width: 16px; height: 16px; flex: none; color: var(--cds-text-secondary); }
   aside h4 { margin: 4px 8px 10px; font-size: 12px; color: var(--cds-text-muted); font-weight: 600; }
-  .row { padding: 7px 10px; border-radius: 8px; }
+  .row { display: flex; gap: 8px; padding: 7px 10px; border-radius: 8px; }
+  .row .icon { margin-top: 2px; }
   .row small { display: block; color: var(--cds-text-secondary); font-size: 12px; }
   .row.sel { background: var(--cds-fill-ghost-selected); }
   .row.hover { background: var(--cds-fill-ghost-hover); }
@@ -43,11 +46,12 @@
 <body>
 <div class="app">
   <aside>
+    <div class="search"><svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>입력칸: 세션 검색</div>
     <h4>최근 세션</h4>
-    <div class="row sel">[테마] Surreal 스니펫<small>방금 전</small></div>
-    <div class="row hover">[팔레트] 색 뽑기<small>1시간 전</small></div>
-    <div class="row">[블로그] 성수 카페<small>어제</small></div>
-    <div class="row">[도장] SQL 12일차<small>3일 전</small></div>
+    <div class="row sel"><svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3.5h10v7H7l-3 2.5v-2.5H3z"/></svg><div>[테마] 테마 편집기<small>방금 전</small></div></div>
+    <div class="row hover"><svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3.5h10v7H7l-3 2.5v-2.5H3z"/></svg><div>[팔레트] 색 뽑기<small>1시간 전</small></div></div>
+    <div class="row"><svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3.5h10v7H7l-3 2.5v-2.5H3z"/></svg><div>[블로그] 성수 카페<small>어제</small></div></div>
+    <div class="row"><svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3.5h10v7H7l-3 2.5v-2.5H3z"/></svg><div>[도장] SQL 12일차<small>3일 전</small></div></div>
   </aside>
   <main>
     <div class="msg user">사이드바 색도 바뀌어?</div>
@@ -64,7 +68,7 @@
   if (q.get('mode')) document.documentElement.dataset.mode = q.get('mode');
   if (q.get('theme') !== 'off')
     fetch('claude-theme.snippet.js').then((r) => r.text())
-      .then((code) => new Function(code.replace(/const PICK = '\w+'/, `const PICK = '${q.get('pick') || 'surreal'}'`))());
+      .then((code) => new Function(q.get('pick') ? code.replace(/const PICK = '[\w-]+'/, `const PICK = '${q.get('pick')}'`) : code)());
 </script>
 </body>
 </html>

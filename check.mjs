@@ -1,6 +1,6 @@
 // 스니펫을 가짜 DOM에서 실행해 만들어진 CSS를 검사한다: node check.mjs
 // 1) 글자 대비(WCAG) 4.5:1 이상  2) 다시 실행해도 <style> 하나  3) 되돌리기로 지워짐
-// vintage는 흐린 글자가 의도라(2026-11-01 사용자 선택) 대비를 보여 주기만 하고 실패로 치지 않는다
+// THEME_LIST의 테마를 전부 검사한다. 대비 실패는 STRICT에 든 테마만 센다(vintage-pastel처럼 흐린 글자가 의도인 테마는 보고만)
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import assert from 'node:assert/strict';
@@ -14,7 +14,11 @@ const document = {
 const source = (file) => readFileSync(new URL(file, import.meta.url), 'utf8');
 const run = (code) => runInNewContext(code, { document, console: { log() {} } });
 const SNIPPET = source('./claude-theme.snippet.js');
-const THEMES = { surreal: true, vintage: false }; // 이름: 대비 검사를 지킬지
+const STRICT = new Set(['dreamcore']);
+
+// 스니펫이 화면을 건드리기 전에 테마 목록만 돌려받는다(editor.html도 같은 방법을 쓴다)
+const { THEME_LIST, THEMES } = run(SNIPPET.replace('  if (!THEMES[PICK])', '  return { THEME_LIST, THEMES };\n  if (!THEMES[PICK])'));
+assert.deepEqual(Object.keys(THEME_LIST).sort(), Object.keys(THEMES).sort(), 'THEME_LIST와 THEMES의 이름이 다름');
 
 const lum = (hex) => {
   const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -35,8 +39,9 @@ const section = (css, name) => {
 const TEXT = ['--cds-text-primary', '--cds-text-secondary', '--cds-text-muted'];
 const BG = { 바탕: '--cds-page-bg', 움푹한면: '--cds-surface-0', 입력창: '--cds-surface-3', 선택줄: '--cds-fill-ghost-selected' };
 let failed = 0;
-for (const [theme, strict] of Object.entries(THEMES)) {
-  const code = SNIPPET.replace(/const PICK = '\w+'/, `const PICK = '${theme}'`);
+for (const theme of Object.keys(THEME_LIST)) {
+  const strict = STRICT.has(theme);
+  const code = SNIPPET.replace(/const PICK = '[\w-]+'/, `const PICK = '${theme}'`);
   run(code);
   run(code);
   assert.equal(styles.length, 1, `${theme}: 다시 실행했더니 <style>이 두 개`);

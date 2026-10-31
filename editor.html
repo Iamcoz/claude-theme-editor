@@ -1,0 +1,218 @@
+<!doctype html>
+<!-- 테마 색 조합 편집기. coz 폴더에서 로컬 서버를 띄우고 /claude-theme/editor.html로 연다(팔레트 색을 ../palettes에서 읽는다).
+     미리보기는 mockup.html에 스니펫을 그대로 실행해서 칠한다. 앱에 적용될 때와 같은 코드라 따로 색칠 코드를 두지 않는다. -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>테마 편집기</title>
+<style>
+  :root { --bg: #f6f6f4; --panel: #fff; --ink: #1d1d1b; --soft: #6b6b66; --line: #e3e2de; --pick: #2f6fdb; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.45 -apple-system, "Apple SD Gothic Neo", sans-serif; background: var(--bg); color: var(--ink); }
+  .editor { display: flex; height: 100vh; }
+  .panel { width: 360px; flex: none; overflow-y: auto; padding: 18px 16px 28px; background: var(--panel); border-right: 1px solid var(--line); }
+  h1 { margin: 0 0 14px; font-size: 16px; }
+  h2 { margin: 22px 0 6px; font-size: 13px; }
+  label.field { display: block; margin-bottom: 8px; color: var(--soft); }
+  select, input[type=text], textarea { width: 100%; margin-top: 4px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; color: inherit; background: #fff; }
+  .about { margin: 0 0 12px; color: var(--soft); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; padding: 6px 16px; font: inherit; background: none; cursor: pointer; }
+  .seg button.on { background: var(--ink); color: #fff; }
+  .hint { margin: 0 0 8px; color: var(--soft); }
+  ul { list-style: none; margin: 10px 0 0; padding: 0; }
+  li { display: grid; grid-template-columns: 30px 1fr 84px 38px; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; cursor: pointer; }
+  li:hover { background: var(--bg); }
+  li.on { background: #e9effb; box-shadow: inset 0 0 0 1px var(--pick); }
+  li input[type=color] { width: 30px; height: 24px; padding: 0; border: 1px solid var(--line); border-radius: 4px; background: none; cursor: pointer; }
+  li input[type=text] { margin: 0; padding: 4px 6px; font: 12px ui-monospace, Menlo, monospace; }
+  .ratio { font: 11px ui-monospace, Menlo, monospace; color: var(--soft); text-align: right; }
+  .ratio.low { color: #b3261e; }
+  .pal h3 { margin: 12px 0 6px; font-size: 12px; font-weight: 600; color: var(--soft); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip { width: 26px; height: 26px; border: 1px solid rgb(0 0 0 / .12); border-radius: 5px; cursor: pointer; }
+  .chip:hover { transform: scale(1.12); }
+  textarea { height: 220px; font: 11.5px/1.5 ui-monospace, Menlo, monospace; resize: vertical; }
+  .actions { display: flex; gap: 6px; margin-top: 8px; }
+  .actions button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: #fff; cursor: pointer; }
+  .actions button.main { background: var(--ink); color: #fff; border-color: var(--ink); }
+  iframe { flex: 1; border: 0; background: #fff; }
+</style>
+</head>
+<body>
+<div class="editor">
+  <aside class="panel">
+    <h1>테마 편집기</h1>
+    <label class="field">테마<select id="theme"></select></label>
+    <p class="about" id="about"></p>
+    <div class="seg" id="mode"><button data-mode="day" class="on">낮</button><button data-mode="night">밤</button></div>
+
+    <h2>색 칸</h2>
+    <p class="hint">칸을 고른 뒤 아래 팔레트 색을 누르거나, 왼쪽 네모를 눌러 직접 골라요. 오른쪽 숫자는 글자 대비(4.5 이상이면 잘 읽혀요).</p>
+    <ul id="slots"></ul>
+
+    <h2>팔레트</h2>
+    <div class="pal" id="palettes"></div>
+
+    <h2>코드</h2>
+    <label class="field">새 테마 이름<input type="text" id="name"></label>
+    <label class="field">설명<input type="text" id="desc"></label>
+    <textarea id="code" readonly></textarea>
+    <div class="actions"><button class="main" id="copy">코드 복사</button><button id="reset">처음 값으로</button></div>
+  </aside>
+  <iframe id="view" src="mockup.html?theme=off&mode=light" title="미리보기"></iframe>
+</div>
+<script>
+  const SLOTS = [
+    ['page', '대화 바탕'], ['sunken', '사이드바(움푹한 면)'], ['raised', '입력창, 메뉴, 카드'], ['field', '입력칸'],
+    ['text', '본문 글자'], ['textSoft', '보조 글자, 아이콘'], ['textFaint', '흐린 글자'], ['line', '구분선'],
+    ['button', '버튼, 링크'], ['buttonHover', '버튼 hover'], ['onButton', '버튼 위 글자'], ['picked', '선택된 목록 줄'],
+    ['tint', '내 메시지 바탕(옅게)'], ['spark', '글자 선택, 강조 표시'],
+  ];
+  const READ_ON = { text: 'page', textSoft: 'page', textFaint: 'page', onButton: 'button' }; // 대비를 잴 바탕
+  const PALETTES = [['dreamcore', '../palettes/surreal-series.md'], ['vintage-pastel', '../palettes/vintage-pastel.md']];
+  // 스니펫이 화면을 건드리기 전에 끼어드는 자리. check.mjs도 같은 줄을 쓴다.
+  const HOOK = '  if (!THEMES[PICK])';
+
+  const $ = (id) => document.getElementById(id);
+  const frame = $('view');
+  let snippet, list, themes, current, mode = 'day', selected = 'page', work;
+
+  const lum = (hex) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const contrast = (a, b) => {
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  // 미리보기: 편집 중인 색을 __edit 테마로 끼워 넣고 스니펫을 mockup 안에서 실행한다
+  const paint = () => {
+    const doc = frame.contentDocument;
+    doc.documentElement.dataset.mode = mode === 'day' ? 'light' : 'dark';
+    frame.contentWindow.eval(snippet
+      .replace(/const PICK = '[\w-]+'/, "const PICK = '__edit'")
+      .replace(HOOK, `  THEMES.__edit = ${JSON.stringify(work)};\n${HOOK}`));
+  };
+
+  const key = (k) => (/^[a-z_$][\w$]*$/i.test(k) ? k : `'${k}'`);
+  const colors = (o, pad) => {
+    const parts = SLOTS.map(([k]) => `${k}: '${o[k]}'`);
+    const lines = [];
+    for (let i = 0; i < parts.length; i += 4) lines.push(`${pad}  ${parts.slice(i, i + 4).join(', ')},`);
+    return `{\n${lines.join('\n')}\n${pad}}`;
+  };
+  const writeCode = () => {
+    const id = $('name').value.trim() || current;
+    $('code').value = [
+      '// THEME_LIST에 넣을 줄',
+      `${key(id)}: '${$('desc').value.replace(/'/g, "\\'")}',`,
+      '',
+      '// THEMES에 넣을 덩어리',
+      `${key(id)}: {`,
+      `  day: ${colors(work.day, '  ')},`,
+      `  night: ${colors(work.night, '  ')},`,
+      '},',
+    ].join('\n');
+  };
+
+  // 칸 줄은 테마나 낮밤이 바뀔 때만 새로 만든다. 색만 바뀔 때 다시 만들면 고르던 색 선택 창이 닫힌다.
+  let rows = [];
+  const update = () => {
+    const c = work[mode];
+    for (const { k, li, picker, hex, ratio } of rows) {
+      li.classList.toggle('on', k === selected);
+      if (document.activeElement !== picker) picker.value = c[k].toLowerCase();
+      if (document.activeElement !== hex) hex.value = c[k];
+      const r = READ_ON[k] ? contrast(c[k], c[READ_ON[k]]) : null;
+      ratio.textContent = r === null ? '' : r.toFixed(1);
+      ratio.classList.toggle('low', r !== null && r < 4.5);
+    }
+    writeCode();
+    paint();
+  };
+  const setColor = (k, hex) => {
+    work[mode][k] = hex.toUpperCase();
+    update();
+  };
+  const render = () => {
+    rows = SLOTS.map(([k, label]) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<input type="color" aria-label="${label}"><span>${label}</span><input type="text" aria-label="${label} 색 코드"><span class="ratio"></span>`;
+      const [picker, hex] = li.querySelectorAll('input');
+      li.onclick = () => { selected = k; update(); };
+      picker.oninput = () => setColor(k, picker.value);
+      hex.onchange = () => (/^#[0-9a-f]{6}$/i.test(hex.value) ? setColor(k, hex.value) : (hex.value = work[mode][k]));
+      return { k, li, picker, hex, ratio: li.lastChild };
+    });
+    $('slots').replaceChildren(...rows.map((r) => r.li));
+    update();
+  };
+
+  const load = (name) => {
+    current = name;
+    work = structuredClone(themes[name]);
+    $('about').textContent = list[name];
+    $('name').value = name;
+    $('desc').value = list[name];
+    render();
+  };
+
+  // 팔레트 문서의 표 줄(| ... | `#RRGGBB` | 이름 |)에서 색과 이름을 뽑는다. 못 읽으면 테마에 쓰인 색만 보여 준다.
+  const loadPalettes = async () => {
+    const groups = await Promise.all(PALETTES.map(async ([title, url]) => {
+      try {
+        const md = await fetch(url).then((r) => (r.ok ? r.text() : ''));
+        const seen = new Map();
+        for (const [, hex, name] of md.matchAll(/\|\s*`(#[0-9A-Fa-f]{6})`\s*\|\s*([^|]*?)\s*\|/g)) if (!seen.has(hex.toUpperCase())) seen.set(hex.toUpperCase(), name);
+        return [title, [...seen]];
+      } catch { return [title, []]; }
+    }));
+    if (groups.every(([, c]) => !c.length)) {
+      const used = new Set(Object.values(themes).flatMap((t) => [...Object.values(t.day), ...Object.values(t.night)]));
+      groups.splice(0, groups.length, ['테마에 쓰인 색', [...used].map((h) => [h, h])]);
+    }
+    $('palettes').replaceChildren(...groups.filter(([, c]) => c.length).map(([title, chips]) => {
+      const box = document.createElement('div');
+      box.innerHTML = `<h3>${title}</h3><div class="chips"></div>`;
+      box.lastChild.append(...chips.map(([hex, name]) => {
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.style.background = hex;
+        b.title = `${name} ${hex}`;
+        b.onclick = () => setColor(selected, hex);
+        return b;
+      }));
+      return box;
+    }));
+  };
+
+  (async () => {
+    snippet = await fetch('claude-theme.snippet.js').then((r) => r.text());
+    ({ THEME_LIST: list, THEMES: themes } = (0, eval)(snippet.replace(HOOK, `  return { THEME_LIST, THEMES };\n${HOOK}`)));
+    $('theme').append(...Object.entries(list).map(([id, about]) => new Option(id, id)));
+    $('theme').onchange = () => load($('theme').value);
+    $('mode').onclick = (e) => {
+      if (!e.target.dataset.mode) return;
+      mode = e.target.dataset.mode;
+      for (const b of $('mode').children) b.classList.toggle('on', b === e.target);
+      render();
+    };
+    $('name').oninput = $('desc').oninput = writeCode;
+    $('reset').onclick = () => load(current);
+    $('copy').onclick = async () => {
+      await navigator.clipboard.writeText($('code').value);
+      $('copy').textContent = '복사됨';
+      setTimeout(() => ($('copy').textContent = '코드 복사'), 1500);
+    };
+    const ready = () => frame.contentDocument?.URL.includes('mockup') && frame.contentDocument.readyState === 'complete';
+    if (!ready()) await new Promise((ok) => frame.addEventListener('load', ok, { once: true }));
+    load(Object.keys(list)[0]);
+    loadPalettes();
+  })();
+</script>
+</body>
+</html>

@@ -2,62 +2,44 @@
 // 앱 화면 모드가 라이트/다크면 그대로, 시스템이면 OS를 따라 낮/밤 색이 바뀐다. 다시 실행하면 내용만 교체된다.
 // 맞춘 앱 버전: 4.29.0 (변수 확인은 node app-vars.mjs)
 (() => {
-  const PICK = 'surreal'; // 쓸 테마: 'surreal' 또는 'vintage'
+  // 고를 수 있는 테마 목록. 쓸 테마 이름을 PICK에 적는다. 새 테마는 editor.html에서 만들어 여기와 THEMES에 붙인다.
+  const THEME_LIST = {
+    dreamcore: 'Surreal Series 영상 색. 낮은 분홍빛 흰 바탕에 청록 버튼, 밤은 짙은 청록 바탕에 복숭아 버튼',
+    'vintage-pastel': '빈티지 파스텔 선호 조합. 밝은 색끼리 겹쳐 글자가 흐린 게 의도. 낮만 있고 밤은 dreamcore 밤',
+  };
+  const PICK = 'dreamcore';
 
-  // 색을 바꾸려면 여기만 고친다
-  const SURREAL_DAY = {
-    page: '#F2E2EA', // 대화 바탕
-    sunken: '#E5D1D7', // 움푹한 면
-    raised: '#F2E2EA', // 입력창, 메뉴, 카드
-    field: '#F2E2EA', // 입력칸
-    text: '#192010',
-    textSoft: '#3D6079',
-    textFaint: '#4D4D2A',
-    line: '#C0ABAA',
-    button: '#215C75',
-    buttonHover: '#2D5981',
-    onButton: '#F2E2EA',
-    picked: '#ECCFDE', // 선택된 목록 줄
-    tint: '#3D6079', // 내 메시지 바탕에 옅게 깔리는 색
-    spark: '#DBA247', // 글자 선택 영역, 강조 표시
-  };
-  const SURREAL_NIGHT = {
-    page: '#203132',
-    sunken: '#37391D',
-    raised: '#2D3C3D',
-    field: '#2D3C3D',
-    text: '#F2E2EA',
-    textSoft: '#A8B6CB',
-    textFaint: '#C0ABAA',
-    line: '#737C8B',
-    button: '#F5BCB0',
-    buttonHover: '#F9D7C6',
-    onButton: '#192010',
-    picked: '#192010',
-    tint: '#A8B6CB',
-    spark: '#DBA247',
-  };
-  // 빈티지 파스텔(../palettes/vintage-pastel.md 선호 조합). 밝은 색끼리 겹쳐 글자가 흐린 게 의도다.
-  const VINTAGE_DAY = {
-    page: '#B7CBA9', // 세이지 민트
-    sunken: '#BCCBE0', // 하늘색 수건
-    raised: '#F3D3D8', // 연분홍 풍선
-    field: '#E6DDA4', // 노랑 풍선
-    text: '#EFECDC', // 연아이보리
-    textSoft: '#859E7A', // 세이지 벽
-    textFaint: '#E3DFC4', // 사무실 아이보리
-    line: '#9D949F',
-    button: '#E9B3BA', // 분홍 풍선
-    buttonHover: '#C9A3A6', // 커튼 로즈
-    onButton: '#EFECDC',
-    picked: '#E9B3BA',
-    tint: '#7A8CA5',
-    spark: '#BFA964',
+  // 색 칸: page 대화 바탕, sunken 사이드바(움푹한 면), raised 입력창·메뉴·카드, field 입력칸,
+  // text 본문 글자, textSoft 보조 글자·아이콘, textFaint 흐린 글자, line 구분선,
+  // button 버튼·링크, buttonHover 버튼 hover, onButton 버튼 위 글자, picked 선택된 목록 줄,
+  // tint 내 메시지 바탕(옅게 깔림), spark 글자 선택 영역·강조 표시
+  const DREAMCORE_NIGHT = {
+    page: '#203132', sunken: '#37391D', raised: '#2D3C3D', field: '#2D3C3D',
+    text: '#F2E2EA', textSoft: '#A8B6CB', textFaint: '#C0ABAA', line: '#737C8B',
+    button: '#F5BCB0', buttonHover: '#F9D7C6', onButton: '#192010', picked: '#192010',
+    tint: '#A8B6CB', spark: '#DBA247',
   };
   const THEMES = {
-    surreal: { day: SURREAL_DAY, night: SURREAL_NIGHT },
-    vintage: { day: VINTAGE_DAY, night: SURREAL_NIGHT },
+    dreamcore: {
+      day: {
+        page: '#F2E2EA', sunken: '#E5D1D7', raised: '#F2E2EA', field: '#F2E2EA',
+        text: '#192010', textSoft: '#3D6079', textFaint: '#4D4D2A', line: '#C0ABAA',
+        button: '#215C75', buttonHover: '#2D5981', onButton: '#F2E2EA', picked: '#ECCFDE',
+        tint: '#3D6079', spark: '#DBA247',
+      },
+      night: DREAMCORE_NIGHT,
+    },
+    'vintage-pastel': {
+      day: {
+        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#F3D3D8', field: '#E6DDA4',
+        text: '#EFECDC', textSoft: '#859E7A', textFaint: '#E3DFC4', line: '#9D949F',
+        button: '#E9B3BA', buttonHover: '#C9A3A6', onButton: '#EFECDC', picked: '#E9B3BA',
+        tint: '#7A8CA5', spark: '#BFA964',
+      },
+      night: DREAMCORE_NIGHT,
+    },
   };
+  if (!THEMES[PICK]) return console.error(`[claude-theme] 없는 테마: ${PICK}. 고를 수 있는 것: ${Object.keys(THEME_LIST).join(', ')}`);
   const { day, night } = THEMES[PICK];
 
   const channels = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));

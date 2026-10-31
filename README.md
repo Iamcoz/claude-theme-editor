@@ -1,19 +1,25 @@
 # Claude 데스크톱 앱 색 테마
 
 Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마는 두 가지예요.
-- `surreal`: Surreal Series 팔레트. 낮/밤 모두 글자 대비 4.5:1 이상
-- `vintage`: 빈티지 파스텔. 낮에만 쓰고 밤은 surreal 밤과 같아요. 밝은 색끼리 겹쳐 글자가 흐린 게 의도라 글자 대비가 1.2~1.6:1이에요
+- `dreamcore`: Surreal Series 영상 색. 낮/밤 모두 글자 대비 4.5:1 이상
+- `vintage-pastel`: 빈티지 파스텔 선호 조합. 낮에만 쓰고 밤은 dreamcore 밤과 같아요. 밝은 색끼리 겹쳐 글자가 흐린 게 의도라 글자 대비가 1.2~1.6:1이에요
 
 앱 CSS 변수를 덮어쓰는 `<style>` 하나만 추가하고, 그 외에는 아무것도 바꾸지 않아요. 앱 4.29.0에 맞춰 만들었어요.
 
-| surreal 낮 | surreal 밤 | vintage 낮 |
+| dreamcore 낮 | dreamcore 밤 | vintage-pastel 낮 |
 |---|---|---|
-| ![surreal 낮](preview-day.jpg) | ![surreal 밤](preview-night.jpg) | ![vintage 낮](preview-vintage-day.jpg) |
+| ![dreamcore 낮](preview-dreamcore-day.jpg) | ![dreamcore 밤](preview-dreamcore-night.jpg) | ![vintage-pastel 낮](preview-vintage-pastel-day.jpg) |
 
 (위 그림은 앱과 같은 변수 이름을 쓰는 목업 화면 `mockup.html`이에요. 실제 앱 화면이 아니에요.)
 
 ## 테마 고르기
-`claude-theme.snippet.js` 맨 위 `const PICK = 'surreal';`을 `'vintage'`로 바꾸고 다시 실행해요.
+`claude-theme.snippet.js` 맨 위 `THEME_LIST`에 고를 수 있는 테마 이름과 설명이 있어요. 그중 하나를 바로 아래 `const PICK = 'dreamcore';`에 적고 다시 실행해요. 없는 이름을 적으면 Console에 고를 수 있는 이름을 보여 줘요.
+
+## 색 조합 바꾸기 (테마 편집기)
+`editor.html`에서 글자, 아이콘, 버튼 같은 칸마다 색을 바꾸면서 미리보기로 바로 볼 수 있어요.
+1. `coz` 폴더(이 폴더의 한 단계 위)에서 `python3 -m http.server`를 실행하고 `http://localhost:8000/claude-theme/editor.html`을 열어요. 한 단계 위에서 여는 건 `../palettes`의 팔레트 색을 같이 읽기 위해서예요.
+2. 테마와 낮/밤을 고르고, 칸을 누른 뒤 아래 팔레트 색을 누르거나 왼쪽 네모를 눌러 직접 골라요. 글자 칸 옆 숫자는 글자 대비예요(4.5 이상이면 잘 읽혀요).
+3. 마음에 들면 새 테마 이름과 설명을 적고 **코드 복사**를 눌러요. 나온 코드의 첫 줄은 `THEME_LIST`에, 나머지 덩어리는 `THEMES`에 붙여 넣어요.
 
 ## 낮/밤 전환
 - 앱 설정의 화면 모드(라이트/다크/시스템)가 **시스템**이면 macOS 라이트/다크를 따라 낮/밤이 바뀌어요.
@@ -41,7 +47,7 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 6. Cmd+S로 저장해요. 이름 옆 `*` 표시가 사라지면 저장된 거예요.
 
 ### 4. 실행하기
-편집 칸을 누른 상태에서 Cmd+Enter를 눌러요. 편집 칸 오른쪽 아래 ▶ 버튼이나, 왼쪽 목록의 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러도 돼요. 바로 앱 색이 바뀌어요. 아래쪽 Console(콘솔)에 `[claude-theme] surreal 적용됨`이 나오면 성공이에요(Console이 안 보이면 Esc를 눌러 열어요).
+편집 칸을 누른 상태에서 Cmd+Enter를 눌러요. 편집 칸 오른쪽 아래 ▶ 버튼이나, 왼쪽 목록의 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러도 돼요. 바로 앱 색이 바뀌어요. 아래쪽 Console(콘솔)에 `[claude-theme] dreamcore 적용됨`이 나오면 성공이에요(Console이 안 보이면 Esc를 눌러 열어요).
 
 다 끝나면 개발자 도구는 닫아도 돼요. 테마는 그대로 남아요.
 
@@ -52,13 +58,13 @@ Console 칸에 `document.getElementById('claude-theme')?.remove();`를 입력하
 테마는 앱을 끄면 사라져요. 다시 켠 뒤 **개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 열고, **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
 
 ## 색 바꾸기
-`claude-theme.snippet.js` 위쪽 색 묶음(`SURREAL_DAY`, `SURREAL_NIGHT`, `VINTAGE_DAY`)만 고치면 돼요. 고친 뒤에는 대비를 확인해요.
+편집기를 쓰거나, `claude-theme.snippet.js` 위쪽 `THEMES`의 색 값만 고치면 돼요. 고친 뒤에는 대비를 확인해요.
 
 ```bash
 node check.mjs
 ```
 
-글자색과 바탕색 대비가 4.5:1(WCAG AA, 본문 글자 기준) 아래로 떨어지면 `FAIL`로 알려 줘요. vintage는 대비를 보여 주기만 하고 실패로 치지 않아요. 화면으로 보고 싶으면 `mockup.html`을 브라우저로 열어요(파일을 바로 열면 스니펫을 못 읽어서 로컬 서버로 열어요. `python3 -m http.server`를 이 폴더에서 실행하고 `http://localhost:8000/mockup.html`로 열어요. 주소 뒤에 `?mode=light`, `?mode=dark`, `&pick=vintage`, `&theme=off`로 비교).
+글자색과 바탕색 대비가 4.5:1(WCAG AA, 본문 글자 기준) 아래로 떨어지면 `FAIL`로 알려 줘요. vintage-pastel처럼 흐린 글자가 의도인 테마는 대비를 보여 주기만 하고 실패로 치지 않아요(`check.mjs`의 `STRICT`에 든 테마만 검사). 화면으로 보고 싶으면 `mockup.html`을 브라우저로 열어요(파일을 바로 열면 스니펫을 못 읽어서 로컬 서버로 열어요. `coz` 폴더에서 `python3 -m http.server`를 실행하고 `http://localhost:8000/claude-theme/mockup.html`로 열어요. 주소 뒤에 `?mode=light`, `?mode=dark`, `&pick=vintage-pastel`, `&theme=off`로 비교).
 
 ## 앱 업데이트 뒤 색이 일부만 바뀌거나 안 바뀔 때
 앱이 CSS 변수 이름을 바꾸면 그 부분만 원래 색으로 남아요. 비공식 방법이라 업데이트마다 깨질 수 있어요(테마 때문에 앱이 고장 나지는 않아요. 색만 덮어써요).
