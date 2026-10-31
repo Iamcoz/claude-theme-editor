@@ -1,0 +1,68 @@
+<!doctype html>
+<!-- 앱과 같은 변수 이름, 같은 모드 선택자를 쓰는 가짜 화면. 주소 뒤 ?mode=light|dark|system(없으면 시스템), &theme=off 면 테마 없이 -->
+<html class="cds-root" lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Surreal 테마 목업</title>
+<style>
+  /* 앱 기본값 흉내: 라이트가 .cds-root 기본, 다크는 앱과 같은 선택자로 덮는다 */
+  .cds-root {
+    --cds-page-bg: #f5f5f3; --cds-surface-0: #f5f5f3; --cds-surface-3: #fff;
+    --cds-text-primary: #1a1a1a; --cds-text-secondary: #666; --cds-text-muted: #888; --cds-border: rgb(0 0 0 / .1);
+    --cds-fill-ghost-hover: rgb(0 0 0 / .05); --cds-fill-ghost-selected: rgb(0 0 0 / .1);
+    --cds-fill-accent: #257de0; --cds-fill-accent-hover: #1757ac; --cds-on-accent: #fff; --cds-text-accent: #257de0;
+    --cds-bg-accent: #e3effc; --cds-bg-user-message: rgb(0 0 0 / .05); --cds-bg-highlight: #fde68a;
+  }
+  [data-mode=dark] .cds-root:not([data-mode=light]):not([data-mode=system]), .cds-root[data-mode=dark] {
+    --cds-page-bg: #1f1f1e; --cds-surface-0: #1f1f1e; --cds-surface-3: #30302e;
+    --cds-text-primary: #f5f5f3; --cds-text-secondary: #b0b0aa; --cds-text-muted: #85857f; --cds-border: rgb(255 255 255 / .1);
+    --cds-fill-ghost-selected: rgb(255 255 255 / .15);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.5 -apple-system, "Apple SD Gothic Neo", sans-serif; background: var(--cds-page-bg); color: var(--cds-text-primary); }
+  .app { display: flex; height: 100vh; }
+  aside { width: 240px; padding: 14px 10px; background: var(--cds-surface-0); border-right: 1px solid var(--cds-border); }
+  aside h4 { margin: 4px 8px 10px; font-size: 12px; color: var(--cds-text-muted); font-weight: 600; }
+  .row { padding: 7px 10px; border-radius: 8px; }
+  .row small { display: block; color: var(--cds-text-secondary); font-size: 12px; }
+  .row.sel { background: var(--cds-fill-ghost-selected); }
+  .row.hover { background: var(--cds-fill-ghost-hover); }
+  main { flex: 1; display: flex; flex-direction: column; padding: 24px 40px; gap: 14px; }
+  .msg.user { align-self: flex-end; max-width: 60%; padding: 10px 14px; border-radius: 14px; background: var(--cds-bg-user-message); }
+  .msg p { margin: 0 0 6px; }
+  .muted { color: var(--cds-text-muted); font-size: 12px; }
+  a { color: var(--cds-text-accent); }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--cds-bg-accent); color: var(--cds-text-accent); font-size: 12px; }
+  .composer { margin-top: auto; padding: 12px; border: 1px solid var(--cds-border); border-radius: 16px; background: var(--cds-surface-3); display: flex; align-items: center; gap: 10px; }
+  .composer span { flex: 1; color: var(--cds-text-muted); }
+  button { border: 0; border-radius: 10px; padding: 8px 14px; font: inherit; background: var(--cds-fill-accent); color: var(--cds-on-accent); }
+  button.hover { background: var(--cds-fill-accent-hover); }
+  mark { background: var(--cds-bg-highlight); color: inherit; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <h4>최근 세션</h4>
+    <div class="row sel">[테마] Surreal 스니펫<small>방금 전</small></div>
+    <div class="row hover">[팔레트] 색 뽑기<small>1시간 전</small></div>
+    <div class="row">[블로그] 성수 카페<small>어제</small></div>
+    <div class="row">[도장] SQL 12일차<small>3일 전</small></div>
+  </aside>
+  <main>
+    <div class="msg user">사이드바 색도 바뀌어?</div>
+    <div class="msg">
+      <p>네, 사이드바는 움푹한 면 색으로 칠해져요. 자세한 건 <a href="#">README</a>를 보세요.</p>
+      <p><span class="chip">surreal-theme</span> <mark>강조 표시</mark> 글자를 드래그하면 선택 영역이 금색이에요.</p>
+      <p class="muted">보조 글자 10:42</p>
+    </div>
+    <div class="composer"><span>메시지를 입력하세요</span><button class="hover">hover</button><button>보내기</button></div>
+  </main>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  if (q.get('mode')) document.documentElement.dataset.mode = q.get('mode');
+  if (q.get('theme') !== 'off') document.write('<script src="surreal-theme.snippet.js"><\/script>');
+</script>
+</body>
+</html>
