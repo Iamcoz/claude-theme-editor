@@ -25,7 +25,7 @@ walk(index, '');
 const appCss = cssFiles.map((f) => read(f.size, dataStart + Number(f.offset)).toString()).join('\n');
 
 const version = readFileSync(`${APP}/Info.plist`, 'utf8').match(/CFBundleShortVersionString<\/key>\s*<string>([^<]+)/)?.[1];
-const snippet = readFileSync(new URL('./surreal-theme.snippet.js', import.meta.url), 'utf8');
+const snippet = readFileSync(new URL('./claude-theme.snippet.js', import.meta.url), 'utf8');
 const used = [...new Set(snippet.match(/'--(?:cds|bg|text)-[\w-]+'/g).map((s) => s.slice(1, -1)))];
 const scopes = [...snippet.matchAll(/'(\[data-mode=\w+\][^']*|\.cds-[^']*)'/g)].map((m) => m[1]);
 

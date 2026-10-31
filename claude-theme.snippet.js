@@ -1,12 +1,15 @@
-// Surreal Series 테마: Claude 데스크톱 앱 DevTools > Sources > Snippets에 저장하고 Cmd+Enter로 실행한다.
+// Claude 데스크톱 앱 색 테마: DevTools > Sources > Snippets에 저장하고 Cmd+Enter로 실행한다.
 // 앱 화면 모드가 라이트/다크면 그대로, 시스템이면 OS를 따라 낮/밤 색이 바뀐다. 다시 실행하면 내용만 교체된다.
 // 맞춘 앱 버전: 4.29.0 (변수 확인은 node app-vars.mjs)
 (() => {
+  const PICK = 'surreal'; // 쓸 테마: 'surreal' 또는 'vintage'
+
   // 색을 바꾸려면 여기만 고친다
-  const DAY = {
+  const SURREAL_DAY = {
     page: '#F2E2EA', // 대화 바탕
     sunken: '#E5D1D7', // 움푹한 면
     raised: '#F2E2EA', // 입력창, 메뉴, 카드
+    field: '#F2E2EA', // 입력칸
     text: '#192010',
     textSoft: '#3D6079',
     textFaint: '#4D4D2A',
@@ -16,11 +19,13 @@
     onButton: '#F2E2EA',
     picked: '#ECCFDE', // 선택된 목록 줄
     tint: '#3D6079', // 내 메시지 바탕에 옅게 깔리는 색
+    spark: '#DBA247', // 글자 선택 영역, 강조 표시
   };
-  const NIGHT = {
+  const SURREAL_NIGHT = {
     page: '#203132',
     sunken: '#37391D',
     raised: '#2D3C3D',
+    field: '#2D3C3D',
     text: '#F2E2EA',
     textSoft: '#A8B6CB',
     textFaint: '#C0ABAA',
@@ -30,8 +35,30 @@
     onButton: '#192010',
     picked: '#192010',
     tint: '#A8B6CB',
+    spark: '#DBA247',
   };
-  const SPARK = '#DBA247'; // 글자 선택 영역, 강조 표시(낮밤 공통)
+  // 빈티지 파스텔(../palettes/vintage-pastel.md 선호 조합). 밝은 색끼리 겹쳐 글자가 흐린 게 의도다.
+  const VINTAGE_DAY = {
+    page: '#B7CBA9', // 세이지 민트
+    sunken: '#BCCBE0', // 하늘색 수건
+    raised: '#F3D3D8', // 연분홍 풍선
+    field: '#E6DDA4', // 노랑 풍선
+    text: '#EFECDC', // 연아이보리
+    textSoft: '#859E7A', // 세이지 벽
+    textFaint: '#E3DFC4', // 사무실 아이보리
+    line: '#9D949F',
+    button: '#E9B3BA', // 분홍 풍선
+    buttonHover: '#C9A3A6', // 커튼 로즈
+    onButton: '#EFECDC',
+    picked: '#E9B3BA',
+    tint: '#7A8CA5',
+    spark: '#BFA964',
+  };
+  const THEMES = {
+    surreal: { day: SURREAL_DAY, night: SURREAL_NIGHT },
+    vintage: { day: VINTAGE_DAY, night: SURREAL_NIGHT },
+  };
+  const { day, night } = THEMES[PICK];
 
   const channels = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
   const fade = (hex, a) => `rgb(${channels(hex).join(' ')} / ${a})`;
@@ -56,7 +83,7 @@
     '--cds-surface-1': c.page,
     '--cds-surface-2': c.raised,
     '--cds-surface-3': c.raised,
-    '--cds-fill-field': c.raised,
+    '--cds-fill-field': c.field,
     // 글자. neutral-900은 앱이 옅은 채움과 hover 색(--cds-alpha-*)을 만드는 기준이라 글자색에 맞춘다
     '--cds-text-primary': c.text,
     '--cds-text-secondary': c.textSoft,
@@ -77,7 +104,7 @@
     '--cds-border-accent': c.button,
     '--cds-bg-accent': fade(c.button, 0.14),
     '--cds-bg-user-message': fade(c.tint, 0.12),
-    '--cds-bg-highlight': fade(SPARK, 0.35),
+    '--cds-bg-highlight': fade(c.spark, 0.35),
     // 예전 claude.ai 변수 중 앱 CSS가 아직 쓰는 것
     '--bg-000': hslParts(c.page),
     '--bg-300': hslParts(c.sunken),
@@ -97,14 +124,14 @@
       .map(([name, value]) => `  ${name}: ${value} !important;`)
       .join('\n')}\n}`;
 
-  const style = document.getElementById('surreal-theme') ?? document.head.appendChild(Object.assign(document.createElement('style'), { id: 'surreal-theme' }));
+  const style = document.getElementById('claude-theme') ?? document.head.appendChild(Object.assign(document.createElement('style'), { id: 'claude-theme' }));
   style.textContent = [
     '/* day */',
-    block(['.cds-root'], DAY),
+    block(['.cds-root'], day),
     '/* night */',
-    block(NIGHT_SCOPES, NIGHT),
-    `@media (prefers-color-scheme: dark) {\n${block(SYSTEM_SCOPES, NIGHT)}\n}`,
-    `::selection { background: ${fade(SPARK, 0.45)} !important; }`,
+    block(NIGHT_SCOPES, night),
+    `@media (prefers-color-scheme: dark) {\n${block(SYSTEM_SCOPES, night)}\n}`,
+    `::selection { background: ${fade(day.spark, 0.45)} !important; }`,
   ].join('\n');
-  console.log('[surreal-theme] 적용됨');
+  console.log(`[claude-theme] ${PICK} 적용됨`);
 })();

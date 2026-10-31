@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- 앱과 같은 변수 이름, 같은 모드 선택자를 쓰는 가짜 화면. 주소 뒤 ?mode=light|dark|system(없으면 시스템), &theme=off 면 테마 없이 -->
+<!-- 앱과 같은 변수 이름, 같은 모드 선택자를 쓰는 가짜 화면. 주소 뒤 ?mode=light|dark|system(없으면 시스템), &pick=surreal|vintage, &theme=off 면 테마 없이 -->
 <html class="cds-root" lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Surreal 테마 목업</title>
+<title>Claude 테마 목업</title>
 <style>
   /* 앱 기본값 흉내: 라이트가 .cds-root 기본, 다크는 앱과 같은 선택자로 덮는다 */
   .cds-root {
@@ -53,7 +53,7 @@
     <div class="msg user">사이드바 색도 바뀌어?</div>
     <div class="msg">
       <p>네, 사이드바는 움푹한 면 색으로 칠해져요. 자세한 건 <a href="#">README</a>를 보세요.</p>
-      <p><span class="chip">surreal-theme</span> <mark>강조 표시</mark> 글자를 드래그하면 선택 영역이 금색이에요.</p>
+      <p><span class="chip">claude-theme</span> <mark>강조 표시</mark> 글자를 드래그하면 선택 영역이 금색이에요.</p>
       <p class="muted">보조 글자 10:42</p>
     </div>
     <div class="composer"><span>메시지를 입력하세요</span><button class="hover">hover</button><button>보내기</button></div>
@@ -62,7 +62,9 @@
 <script>
   const q = new URLSearchParams(location.search);
   if (q.get('mode')) document.documentElement.dataset.mode = q.get('mode');
-  if (q.get('theme') !== 'off') document.write('<script src="surreal-theme.snippet.js"><\/script>');
+  if (q.get('theme') !== 'off')
+    fetch('claude-theme.snippet.js').then((r) => r.text())
+      .then((code) => new Function(code.replace(/const PICK = '\w+'/, `const PICK = '${q.get('pick') || 'surreal'}'`))());
 </script>
 </body>
 </html>

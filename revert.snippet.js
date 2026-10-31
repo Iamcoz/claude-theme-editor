@@ -1,1 +1,1 @@
-document.getElementById('surreal-theme')?.remove();
+document.getElementById('claude-theme')?.remove();
