@@ -101,6 +101,9 @@ node check.mjs
 | `app-vars.mjs` | 스니펫이 쓰는 이름이 지금 앱에 있는지 검사 |
 
 ## 라이선스
-[PolyForm Noncommercial 1.0.0](LICENSE)이에요.
-- 개인 사용, 공부, 취미처럼 돈을 벌지 않는 목적이면 자유롭게 쓰고 고쳐서 나눠도 돼요. 나눌 때는 `LICENSE` 파일을 같이 넣어 주세요.
-- 상업적으로 쓰려면(판매, 유료 서비스나 제품에 넣기, 회사 업무용 배포 등) 먼저 허락을 받아야 해요. 이 저장소의 [Issues](https://github.com/Iamcoz/claude-theme-editor/issues)에 문의해 주세요.
+Copyright (c) 2026 iamcoz
+
+[AGPL-3.0](LICENSE)이에요.
+- 누구나 쓰고, 고치고, 나눠도 돼요.
+- 고친 것을 다른 사람에게 배포하거나 서비스로 돌려 남이 쓰게 하면, 그 소스도 AGPL-3.0으로 공개해야 해요.
+- 소스 공개 없이 상업적으로 쓰고 싶다면 별도 라이선스가 필요해요. 이 저장소의 [Issues](https://github.com/Iamcoz/claude-theme-editor/issues)로 문의해 주세요.
