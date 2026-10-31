@@ -31,7 +31,7 @@
     },
     'vintage-pastel': {
       day: {
-        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#E6DDA4', composer: '#E6DDA4', field: '#E6DDA4',
+        page: '#B7CBA9', sunken: '#BCCBE0', raised: '#E6DDA4', composer: '#E9B3BA', field: '#E6DDA4',
         text: '#EFECDC', textSoft: '#859E7A', textFaint: '#EFECDC', line: '#E9B3BA',
         button: '#DA9D9B', buttonHover: '#D58C95', onButton: '#EFECDC', picked: '#E6DDA4',
         tint: '#BCCBE0', spark: '#BFA964',
