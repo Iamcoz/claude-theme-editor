@@ -55,7 +55,7 @@ const css = `${asarCss}\n${webCss}`;
 
 const version = readFileSync(`${APP}/Info.plist`, 'utf8').match(/CFBundleShortVersionString<\/key>\s*<string>([^<]+)/)?.[1];
 const snippet = readFileSync(new URL('./claude-theme.snippet.js', import.meta.url), 'utf8');
-const used = [...new Set(snippet.match(/'--(?:cds|bg|text|df)-[\w-]+'/g).map((s) => s.slice(1, -1)))];
+const used = [...new Set(snippet.match(/'--(?:cds|bg|text|df|engine)-[\w-]+'/g).map((s) => s.slice(1, -1)))];
 // 선택자는 통째로 같은 줄이 없을 수 있어서, 들어 있는 클래스와 속성 이름이 앱 CSS에 있는지만 본다
 const tokens = [...new Set([...snippet.matchAll(/'((?:\[data-mode=\w+\]|\[data-code-|\.cds-|\.dframe-|\.bg-surface-|:root)[^']*)'/g)]
   .flatMap((m) => m[1].match(/\.[\w-]+|\[[\w-]+(?:=\w+)?\]/g) ?? []))];

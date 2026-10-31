@@ -146,8 +146,9 @@
     '--df-z6': hslParts(c.textFaint),
   });
   const FRAME = ['.dframe-root', '.dframe-root .dframe-sidebar', '.dframe-root .dframe-sidebar-body', '.dframe-root .dframe-card'];
-  // 하단 채팅 입력창. 메뉴와 같은 면 변수를 쓰므로 입력창 상자에만 따로 다시 건다
-  const composerVars = (c) => ({ '--cds-surface-3': c.composer, '--cds-surface-popover': c.composer });
+  // 하단 채팅 입력창. 메뉴와 같은 면 변수를 쓰므로 입력창 상자에만 따로 다시 건다.
+  // 앱의 유리 효과(data-engine-glass)는 입력창 색을 46%만 섞고 나머지를 투명하게 둬서 색이 옅어 보인다. 100%로 칠한다
+  const composerVars = (c) => ({ '--cds-surface-3': c.composer, '--cds-surface-popover': c.composer, '--engine-pane-share': '100%' });
   const COMPOSER = ['[data-code-composer-column] .bg-surface-3', '.bg-surface-3.shadow-composer', '.bg-surface-3.rounded-composer'];
 
   // 앱 CSS와 같은 구조: 낮은 기본값, 밤은 더 구체적인 선택자로 덮는다. 앱은 data-mode가 없으면 시스템으로 본다.
