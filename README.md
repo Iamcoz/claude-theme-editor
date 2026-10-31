@@ -60,7 +60,7 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 Console 칸에 `document.getElementById('claude-theme')?.remove();`를 입력하고 Enter를 눌러요. 앱을 다시 시작해도 원래 색으로 돌아가요. `revert.snippet.js`를 3단계처럼 스니펫으로 저장해 둬도 돼요.
 
 ## 앱을 다시 시작했을 때
-테마는 앱을 끄면 사라져요. 다시 켠 뒤 **개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 열고, **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
+테마는 앱을 끄면 사라져요. 앱에는 사용자 색을 저장해 두는 기능이 없어서, 이 방법은 켤 때마다 한 번 실행해야 해요. 다시 켠 뒤 **개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 열고, **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
 
 ## 색 바꾸기
 편집기를 쓰거나, `claude-theme.snippet.js` 위쪽 `THEMES`의 색 값만 고치면 돼요. 고친 뒤에는 대비를 확인해요.
@@ -73,10 +73,10 @@ node check.mjs
 
 ## 앱 업데이트 뒤 색이 일부만 바뀌거나 안 바뀔 때
 앱이 CSS 변수 이름을 바꾸면 그 부분만 원래 색으로 남아요. 비공식 방법이라 업데이트마다 깨질 수 있어요(테마 때문에 앱이 고장 나지는 않아요. 색만 덮어써요).
-1. 스니펫이 쓰는 변수와 선택자가 설치된 앱에 아직 있는지 확인해요. `없음`으로 나온 줄이 고칠 곳이에요.
+1. 스니펫이 쓰는 변수와 선택자가 앱에 아직 있는지 확인해요. 앱 파일과 앱이 claude.ai에서 받아 둔 CSS를 같이 봐요(`zstd`가 필요해요). `없음`으로 나온 줄이 고칠 곳이에요.
 
    ```bash
    node app-vars.mjs
    ```
 2. 원래 색으로 남은 영역은 DevTools **Elements** 탭에서 골라, 오른쪽 **Styles**에서 `background`나 `color`에 쓰인 `var(--이름)`을 찾아요.
-3. 그 이름을 `claude-theme.snippet.js`의 `appVars()` 안에 추가하거나 바뀐 이름으로 고쳐요. 변수 이름은 이 함수 한 곳에만 있어요.
+3. 그 이름을 `claude-theme.snippet.js`의 `appVars()`(사이드바, 카드 같은 틀 요소면 `frameVars()`) 안에 추가하거나 바뀐 이름으로 고쳐요.

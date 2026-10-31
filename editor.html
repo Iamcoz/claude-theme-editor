@@ -80,9 +80,9 @@
     ['page', '대화 바탕'], ['sunken', '사이드바(움푹한 면)'], ['raised', '입력창, 메뉴, 카드'], ['field', '입력칸'],
     ['text', '본문 글자'], ['textSoft', '보조 글자, 아이콘'], ['textFaint', '흐린 글자'], ['line', '구분선'],
     ['button', '버튼, 링크'], ['buttonHover', '버튼 hover'], ['onButton', '버튼 위 글자'], ['picked', '선택된 목록 줄'],
-    ['tint', '내 메시지 바탕(옅게)'], ['spark', '글자 선택, 강조 표시'],
+    ['tint', '내 메시지 말풍선'], ['spark', '글자 선택, 강조 표시'],
   ];
-  const READ_ON = { text: 'page', textSoft: 'page', textFaint: 'page', onButton: 'button' }; // 대비를 잴 바탕
+  const READ_ON = { text: 'page', textSoft: 'page', textFaint: 'page', onButton: 'button', tint: 'text' }; // 대비를 잴 짝(말풍선은 그 위 본문 글자)
   const PALETTE_DIR = '../palettes/';
   // 스니펫이 화면을 건드리기 전에 끼어드는 자리. check.mjs도 같은 줄을 쓴다.
   const HOOK = '  if (!THEMES[PICK])';

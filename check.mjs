@@ -50,6 +50,7 @@ for (const theme of Object.keys(THEME_LIST)) {
     const v = section(css, name);
     const pairs = [
       ...TEXT.flatMap((t) => Object.entries(BG).map(([b, bg]) => [t, v[t], b, v[bg]])),
+      ['--cds-text-primary', v['--cds-text-primary'], '내 말풍선', v['--cds-bg-user-message']], // 말풍선 안에는 본문 글자만 있다
       ['--cds-on-accent', v['--cds-on-accent'], '버튼', v['--cds-fill-accent']],
       ['--cds-on-accent', v['--cds-on-accent'], '버튼 hover', v['--cds-fill-accent-hover']],
       ['--cds-text-accent', v['--cds-text-accent'], '바탕', v['--cds-page-bg']],
