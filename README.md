@@ -20,16 +20,36 @@ Claude 데스크톱 앱의 색을 바꾸는 DevTools 스니펫이에요. 테마�
 - 앱을 라이트나 다크로 고정했다면 그쪽 테마만 나와요.
 
 ## 적용하기
-1. 처음 한 번만: Claude 앱 메뉴 **Help > Troubleshooting > Enable Developer Mode**를 켜요.
-2. **Developer > Show Dev Tools**(Option+Cmd+I)를 열어요.
-3. DevTools 위쪽 **Sources** 탭으로 가서, 왼쪽 패널의 Page·Workspace 옆 **>>**를 누르고 **Snippets**를 골라요. **+ New snippet**을 눌러 이름을 `claude-theme`으로 해요.
-4. `claude-theme.snippet.js` 내용을 전부 붙여 넣고 Cmd+S로 저장해요.
-5. Cmd+Enter로 실행해요. Console에 `[claude-theme] surreal 적용됨`이 나오면 성공이에요.
+메뉴 이름은 앱 언어에 따라 달라서 한국어와 영어를 같이 적었어요. 개발자 도구(DevTools) 안은 영어로 나올 수 있어요.
 
-되돌리기: `revert.snippet.js`도 같은 방법으로 Snippets에 저장해 두고 실행해요. Console에 한 줄(`document.getElementById('claude-theme')?.remove();`)을 직접 쳐도 돼요. 앱을 다시 시작해도 원래 색으로 돌아가요.
+### 1. 개발자 모드 켜기 (처음 한 번만)
+1. Claude 앱을 앞에 띄운 상태에서 화면 맨 위 메뉴 막대를 봐요.
+2. **도움말 > 문제 해결 > 개발자 모드 활성화…** (Help > Troubleshooting > Enable Developer Mode…)를 눌러요.
+3. 경고 창에서 **활성화**(Enable)를 눌러요. 메뉴 막대에 **개발자**(Developer) 메뉴가 새로 생겨요.
+
+### 2. 개발자 도구 열기
+**개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 눌러요. 단축키는 Option+Cmd+I예요. 앱 옆이나 아래, 또는 따로 개발자 도구 창이 열려요.
+
+### 3. 스니펫 저장하기
+스니펫(Snippet)은 개발자 도구 안에 저장해 두는 작은 코드 파일이에요. 한 번 저장해 두면 앱을 다시 켤 때마다 눌러서 실행만 하면 돼요.
+1. 이 폴더의 `claude-theme.snippet.js`를 열어 전부 선택(Cmd+A)하고 복사(Cmd+C)해요.
+2. 개발자 도구 맨 위 탭 줄에서 **Sources**(소스)를 눌러요. 탭이 안 보이면 탭 줄 오른쪽 끝 **>>**를 눌러 찾아요.
+3. Sources 화면 왼쪽 칸 위에 작은 탭들(Page, Workspace, Overrides…)이 있어요. 거기서 **Snippets**(스니펫)를 눌러요. 안 보이면 그 줄의 **>>**를 눌러 찾아요. 왼쪽 칸 자체가 안 보이면 Sources 화면 왼쪽 위 사이드바 모양 아이콘(Show navigator)을 눌러요.
+4. **+ New snippet**을 눌러요. 목록에 `Script snippet #1`이 생기면 이름을 `claude-theme`으로 바꾸고 Enter를 눌러요.
+5. 오른쪽 빈 편집 칸을 한 번 누르고 붙여 넣어요(Cmd+V).
+   - 붙여 넣기 경고가 뜨면 안내대로 `allow pasting`을 입력하고 Enter를 누른 뒤 다시 붙여 넣어요. 남이 준 코드를 모르고 붙여 넣는 사고를 막는 경고라 처음 한 번만 떠요.
+6. Cmd+S로 저장해요. 이름 옆 `*` 표시가 사라지면 저장된 거예요.
+
+### 4. 실행하기
+편집 칸을 누른 상태에서 Cmd+Enter를 눌러요. 편집 칸 오른쪽 아래 ▶ 버튼이나, 왼쪽 목록의 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러도 돼요. 바로 앱 색이 바뀌어요. 아래쪽 Console(콘솔)에 `[claude-theme] surreal 적용됨`이 나오면 성공이에요(Console이 안 보이면 Esc를 눌러 열어요).
+
+다 끝나면 개발자 도구는 닫아도 돼요. 테마는 그대로 남아요.
+
+### 되돌리기
+Console 칸에 `document.getElementById('claude-theme')?.remove();`를 입력하고 Enter를 눌러요. 앱을 다시 시작해도 원래 색으로 돌아가요. `revert.snippet.js`를 3단계처럼 스니펫으로 저장해 둬도 돼요.
 
 ## 앱을 다시 시작했을 때
-테마는 앱을 끄면 사라져요. 다시 켠 뒤 DevTools > Sources > Snippets에서 저장해 둔 `claude-theme`을 골라 Cmd+Enter만 누르면 돼요. 여러 번 실행해도 `<style>`은 하나만 남아요.
+테마는 앱을 끄면 사라져요. 다시 켠 뒤 **개발자 > 개발자 도구 표시** (Developer > Show Dev Tools)를 열고, **Sources > Snippets**에서 `claude-theme`을 오른쪽 클릭해 **Run**을 눌러요. 여러 번 실행해도 `<style>`은 하나만 남아요.
 
 ## 색 바꾸기
 `claude-theme.snippet.js` 위쪽 색 묶음(`SURREAL_DAY`, `SURREAL_NIGHT`, `VINTAGE_DAY`)만 고치면 돼요. 고친 뒤에는 대비를 확인해요.
